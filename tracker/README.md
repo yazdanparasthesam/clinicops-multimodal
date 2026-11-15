@@ -1,7 +1,7 @@
 # Task tracker
 
 The public tracker for this project lives in **GitHub Issues** on the repository
-(`https://github.com/your-org/clinicops-multimodal/issues`). This directory is the
+(`https://github.com/yazdanparasthesam/clinicops-multimodal/issues`). This directory is the
 source of truth the issues are generated from — every issue has acceptance criteria
 and an **agent evidence log** (repo artifact, verification command, and—after import—
 commit/CI links). Completed-work notes are retrospective; use the public issues for any

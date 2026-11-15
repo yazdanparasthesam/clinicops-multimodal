@@ -20,7 +20,14 @@ def recompute_visit(db: Session, visit: Visit, intake_override: dict | None = No
     atts = db.query(Attachment).filter(Attachment.visit_id == visit.id).all()
     att_dicts = [{"kind": a.kind, "mime": a.mime} for a in atts]
     # build visit dict for validators
-    visit_dict = {"id": visit.id, "patient_name": visit.patient_name, "consent": (visit.scores_json or {}).get("consent", False), "transcript_confidence": visit.transcript_confidence}
+    # consent lives in intake, not top-level — read from _intake or override
+    _intake_for_consent = intake if intake else (visit.scores_json or {}).get("_intake", {})
+    consent_val = _intake_for_consent.get("consent") if isinstance(_intake_for_consent, dict) else False
+    if isinstance(consent_val, str):
+        consent_val = consent_val.strip().lower() in ("yes","true","1","y","consented")
+    else:
+        consent_val = bool(consent_val)
+    visit_dict = {"id": visit.id, "patient_name": visit.patient_name, "consent": consent_val, "transcript_confidence": visit.transcript_confidence}
     # also allow intake allergies
     validations = validate_all(visit_dict, intake, att_dicts)
     # persist

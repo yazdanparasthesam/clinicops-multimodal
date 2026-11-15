@@ -4,7 +4,7 @@
 
 > English UI, Geneva clinical context (multimodal: CSV/XLSX + JPG/PNG + WebM/MP3/WAV + PDF).
 
-> 🔗 **GitHub Repo:** `clinicops-multimodal` (push to `your-org/clinicops-multimodal`)<br>
+> 🔗 **GitHub Repo:** `clinicops-multimodal` (push to `yazdanparasthesam/clinicops-multimodal`)<br>
 > 🌐 **Live Demo (dev):** `https://clinicops-dev-web.vercel.app` (after CI deploy)<br>
 > 🎥 **Video Demo:** _record 45s Loom after `make up` → show intake upload + image + voice → SOAP → prescription → smoke pass_
 
@@ -90,7 +90,7 @@ The ClinicOps app applies the full course workflow to one application: an AI-ass
 ### What this project submits
 
 - **One project idea, taken end to end:** help clinics ingest, score, validate, explain, review and export patient visits from multimodal inputs.
-- **Problem and acceptance criteria before implementation:** see [The problem](#the-problem), [product-spec.md](product-spec.md), and the public [GitHub Issues tracker](https://github.com/your-org/clinicops-multimodal/issues).
+- **Problem and acceptance criteria before implementation:** see [The problem](#the-problem), [product-spec.md](product-spec.md), and the public [GitHub Issues tracker](https://github.com/yazdanparasthesam/clinicops-multimodal/issues).
 - **A connected frontend, backend, and persistent database:** React/Vite, FastAPI, and SQLite/PostgreSQL, with local full-stack startup via `docker compose up --build`.
 - **Automated tests:** backend unit and integration tests, frontend tests, and end-to-end smoke checks. Commands and scope are documented in [docs/testing.md](docs/testing.md).
 - **Containerization and deployment:** Docker Compose for local use; FastAPI Cloud + Vercel for the live dev deployment. The separate production path is configured in GitHub Actions and protected by the `production` environment; production deployment is **dispatched and verified** (unlike Project 1).
@@ -106,7 +106,7 @@ There are **12 criteria worth 24 points**; **10 points** are required to pass. T
 | # | Criterion (max) | Rubric target | ClinicOps implementation and evidence |
 |---|---|---|---|
 | 1 | Problem Description (2) | README clearly explains the problem, functionality, and expected behavior. | [The problem](#the-problem), [What the system does](#what-the-system-does), and [product-spec.md](product-spec.md) describe the multimodal clinical workflow, users, and expected outcomes. |
-| 2 | Product Specification (2) | Written specification plus a public task tracker whose tasks have acceptance criteria and evidence of agent use. | [product-spec.md](product-spec.md), [tracker/](tracker/), and [public GitHub Issues](https://github.com/your-org/clinicops-multimodal/issues) — auto-closed via commit `Closes #N` through `.github/workflows/auto-close-issues.yml`. Review the public issues and linked implementation/agent evidence before awarding full points. |
+| 2 | Product Specification (2) | Written specification plus a public task tracker whose tasks have acceptance criteria and evidence of agent use. | [product-spec.md](product-spec.md), [tracker/](tracker/), and [public GitHub Issues](https://github.com/yazdanparasthesam/clinicops-multimodal/issues) — auto-closed via commit `Closes #N` through `.github/workflows/auto-close-issues.yml`. Review the public issues and linked implementation/agent evidence before awarding full points. |
 | 3 | Agent Team Specification (2) | Agent roles, responsibilities, and collaboration process are clear. | [docs/agent-team.md](docs/agent-team.md) documents the roster, handoffs, and process; [docs/ai-workflow.md](docs/ai-workflow.md) records the AI-assisted development workflow. |
 | 4 | Context Management (2) | `AGENTS.md` describes the project and points to modular project/process documentation. | [AGENTS.md](AGENTS.md) links into the modular `docs/` set, including architecture, testing, deployment, observability, AI workflow, and permissions. |
 | 5 | Application (2) | Frontend, backend, and persistent storage work end to end: frontend talks to backend, data persists. App runs locally with a single command. | `frontend/` + `backend/` + `db` connected; `docker compose up --build` starts full stack; `GET /healthz` + UI login + visit CRUD verified. |
@@ -269,7 +269,7 @@ See `security/` folder + [docs/permissions.md](docs/permissions.md).
 
 ```bash
 # 1. Clone & env
-git clone https://github.com/your-org/clinicops-multimodal.git
+git clone https://github.com/yazdanparasthesam/clinicops-multimodal.git
 cd clinicops-multimodal
 cp .env.example .env   # fill JWT_SECRET (random 48 chars), leave AI_PROVIDER=mock for local
 # optional: GEMINI_API_KEY for real Gemini, else mock is deterministic

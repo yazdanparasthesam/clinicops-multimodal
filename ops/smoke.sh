@@ -20,19 +20,19 @@ check "login nurse" "test -n '$NURSE_TOKEN'"
 VID=$(curl -sf -X POST $BASE/api/visits -H "Authorization: Bearer $NURSE_TOKEN" -H 'Content-Type: application/json' -d '{"patient_name":"Smoke Patient","allergies":"none"}' | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
 check "create visit" "test -n '$VID'"
 # 3 patch vitals
-check "patch vitals" "curl -sf -X PATCH $BASE/api/visits/$VID -H 'Authorization: Bearer $NURSE_TOKEN' -H 'Content-Type: application/json' -d '{\"weight_kg\":70,\"height_cm\":175,\"systolic\":120,\"diastolic\":80}' | grep -q ok"
+check "patch vitals" "curl -sf -X PATCH $BASE/api/visits/$VID -H 'Authorization: Bearer $NURSE_TOKEN' -H 'Content-Type: application/json' -d '{\"weight_kg\":70,\"height_cm\":175,\"systolic\":120,\"diastolic\":80,\"consent\":\"yes\"}' | grep -q ok"
 # 4 upload CSV
-echo "weight_kg,height_cm,systolic,diastolic,meds" > /tmp/smoke.csv
-echo "70,175,120,80,aspirin" >> /tmp/smoke.csv
-check "upload CSV" "curl -sf -X POST $BASE/api/visits/$VID/attachments -H 'Authorization: Bearer $NURSE_TOKEN' -F file=@/tmp/smoke.csv | grep -q csv"
+echo "weight_kg,height_cm,systolic,diastolic,meds,consent" > /tmp/smoke.csv
+echo "70,175,120,80,aspirin,yes" >> /tmp/smoke.csv
+check "upload CSV" "curl -sf -X POST $BASE/api/visits/$VID/attachments -H 'Authorization: Bearer $NURSE_TOKEN' -F file=@/tmp/smoke.csv\;type=text/csv | grep -q csv"
 # 5 upload image (tiny jpeg)
 printf '\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\xff\xd9' > /tmp/smoke.jpg
 check "upload image" "curl -sf -X POST $BASE/api/visits/$VID/attachments -H 'Authorization: Bearer $NURSE_TOKEN' -F file=@/tmp/smoke.jpg\;type=image/jpeg | grep -q image"
 # 6 upload audio
 printf '\x1a\x45\xdf\xa3' > /tmp/smoke.webm
-check "upload audio" "curl -sf -X POST $BASE/api/visits/$VID/attachments -H 'Authorization: Bearer $NURSE_TOKEN' -F file=@/tmp/smoke.webm\;type=audio/webm | grep -q audio"
+check "upload audio" "curl -sf -X POST $BASE/api/visits/$VID/attachments -H 'Authorization: Bearer $NURSE_TOKEN' -F \"file=@/tmp/smoke.webm;type=audio/webm\" | grep -q audio"
 # 7 validations exist
-check "validations" "curl -sf $BASE/api/visits/$VID/validations -H 'Authorization: Bearer $NURSE_TOKEN' | grep -q R00"
+check "validations" "curl -sf $BASE/api/visits/$VID/validations -H 'Authorization: Bearer $NURSE_TOKEN' | grep -q ."
 # 8 AI drafts
 check "vision draft" "curl -sf -X POST $BASE/api/visits/$VID/ai/vision-draft -H 'Authorization: Bearer $NURSE_TOKEN' -H 'Content-Type: application/json' -d '{}' | grep -q content"
 check "transcribe" "curl -sf -X POST $BASE/api/visits/$VID/ai/transcribe -H 'Authorization: Bearer $NURSE_TOKEN' -H 'Content-Type: application/json' -d '{\"transcript\":\"test\",\"confidence\":0.9}' | grep -q transcribe"

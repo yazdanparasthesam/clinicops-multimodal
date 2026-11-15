@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, type FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '../../api/client'

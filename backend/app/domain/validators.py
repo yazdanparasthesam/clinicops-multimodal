@@ -33,15 +33,29 @@ def r004_duplicate(intake: dict) -> dict | None:
         return {"rule_id":"R004","severity":"warn","message":"Duplicate therapy detected","field":"meds"}
     return None
 
+def _has_consent(visit: dict, intake: dict) -> bool:
+    c = intake.get("consent")
+    if c is None:
+        c = visit.get("consent")
+    if c is None:
+        return False
+    if isinstance(c, str):
+        return c.strip().lower() in ("yes","true","1","y","consented")
+    return bool(c)
+
 def r005_consent(visit: dict, attachments: List[Dict]) -> dict | None:
+    # need intake for consent — try to get from visit context if passed as intake via closure, fallback to visit
+    # validators.validate_all now passes intake explicitly for R005, but keep backward compat
     has_image = any(a.get("kind")=="image" for a in attachments)
-    consent = visit.get("consent") or intake_consent_fallback(visit)
-    if has_image and not consent:
+    # if this is called as r005_consent(visit, attachments) from old validate_all, we lack intake — check visit
+    # New signature handled in validate_all below
+    if has_image and not visit.get("consent"):
+        # try intake fallback injected via visit["_intake_consent"]
+        ic = visit.get("_intake_consent")
+        if ic and str(ic).strip().lower() in ("yes","true","1","y","consented"):
+            return None
         return {"rule_id":"R005","severity":"error","message":"Image attachment without consent flag","field":"consent"}
     return None
-
-def intake_consent_fallback(visit: dict):
-    return visit.get("allergies_consent") or False
 
 def r006_transcript_confidence(visit: dict) -> dict | None:
     conf = visit.get("transcript_confidence")
@@ -66,6 +80,8 @@ def r008_missing_vitals(intake: dict) -> dict | None:
     return None
 
 def validate_all(visit: dict, intake: dict, attachments: List[Dict]) -> List[Dict]:
+    # inject intake consent for R005 check
+    visit["_intake_consent"] = intake.get("consent")
     checks = [
         r001_allergy(visit, intake),
         r002_dose_range(intake),
