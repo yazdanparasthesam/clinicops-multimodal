@@ -1,0 +1,70 @@
+name: Auto-close tracker issues on commit
+
+# Closes tracker issues when commits contain "Closes #N" / "Fixes #N" / "Resolves #N"
+# Like financial-statement's manual gh close workflow, but automated for ClinicOps.
+# Agent commits should reference tracker issues: e.g. "feat: multimodal intake (Closes #2)"
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  close-issues:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Parse commits and close referenced issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commits = context.payload.commits || [];
+            const closeRe = /(?:Closes|Fixes|Resolves|Closed)\s+#(\d+)/gi;
+            const found = new Set();
+            for (const c of commits) {
+              let m;
+              const msg = c.message || "";
+              while ((m = closeRe.exec(msg)) !== null) {
+                found.add(parseInt(m[1], 10));
+              }
+            }
+            if (found.size === 0) {
+              console.log("No Closes #N in commits — nothing to auto-close");
+              return;
+            }
+            for (const num of found) {
+              try {
+                const { data: issue } = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: num
+                });
+                if (issue.state === 'closed') {
+                  console.log(`#${num} already closed — skip`);
+                  continue;
+                }
+                // Verify it is a tracker issue (has file in tracker/issues/)
+                // We still close it — label check is optional, but we log it
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: num,
+                  body: `Auto-closed by commit ${context.sha.slice(0,7)} — agent log + verification in commit message. Tracker file: \`tracker/issues/${String(num).padStart(3,'0')}-*.md\``
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: num,
+                  state: 'closed'
+                });
+                console.log(`Closed #${num}`);
+              } catch (e) {
+                console.log(`Failed to close #${num}: ${e.message}`);
+              }
+            }

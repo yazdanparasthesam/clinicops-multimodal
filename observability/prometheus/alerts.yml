@@ -1,0 +1,19 @@
+groups:
+  - name: clinicops-user-impact
+    rules:
+      - alert: PrescriptionSaveFailing
+        expr: increase(http_requests_total{status=~"5..",route="/api/visits"}[5m]) > 2
+        for: 1m
+        labels: { severity: critical }
+        annotations: { summary: "Prescription save failing (user impact)", runbook: "docs/observability.md" }
+      - alert: ImageAnalysisFailing
+        expr: increase(http_requests_total{status=~"5..",route="/api/visits/.+/ai/vision-draft"}[5m]) > 1
+        labels: { severity: critical }
+      - alert: HighLatencyVisit
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.8
+        for: 5m
+        labels: { severity: warning }
+      - alert: TranscriptionStuck
+        expr: visit_attachments_total{modality="audio",status="pending"} > 5
+        for: 2m
+        labels: { severity: warning }

@@ -1,0 +1,9 @@
+global:
+  resolve_timeout: 5m
+route:
+  receiver: oncall
+receivers:
+  - name: oncall
+    webhook_configs:
+      - url: 'http://oncall-agent:8090/webhook'
+        send_resolved: true

@@ -1,0 +1,2 @@
+weight_kg,height_cm,systolic,diastolic,meds,allergies,consent
+70,175,120,80,aspirin,none,true

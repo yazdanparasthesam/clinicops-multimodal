@@ -1,0 +1,14 @@
+openapi: 3.0.0
+info:
+  title: ClinicOps Multimodal
+  version: 0.2.0
+paths:
+  /healthz:
+    get: { responses: { '200': { description: ok } } }
+  /api/auth/register:
+    post: { summary: Register }
+  /api/visits:
+    get: { summary: List }
+    post: { summary: Create }
+  /api/visits/{id}/attachments:
+    post: { summary: Upload multimodal }

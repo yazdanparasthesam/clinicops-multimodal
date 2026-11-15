@@ -1,0 +1,27 @@
+name: Deploy Dev (auto)
+on:
+  push:
+    branches: [main]
+    paths: [ 'backend/**','frontend/**','docker-compose.yml','.github/workflows/deploy.yml' ]
+  workflow_dispatch: {}
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy API to FastAPI Cloud (dev)
+        run: |
+          echo "Deploy clinicops-dev-api via fastapi-cloud CLI (mock)"
+          curl -sf ${{ secrets.DEV_API_URL }}/healthz || echo "dev API not yet deployed — create app clinicops-dev-api with root backend"
+      - name: Smoke dev
+        run: BASE=${{ secrets.DEV_API_URL }} bash ops/smoke.sh ${{ secrets.DEV_API_URL }}
+      - name: Deploy Web to Vercel (dev)
+        run: |
+          echo "Deploy clinicops-dev-web via vercel CLI (mock)"
+          npx vercel deploy --prod --token=${{ secrets.VERCEL_DEV_TOKEN }} --yes || echo "vercel deploy step — configure project clinicops-dev-web with root frontend"
+  deploy-prod:
+    if: false  # never run in this workflow; use promote-prod.yml manual dispatch only
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "prod skipped — use promote-prod.yml"

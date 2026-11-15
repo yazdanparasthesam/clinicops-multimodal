@@ -1,0 +1,30 @@
+name: Tracker sync check
+
+# Verifies that tracker/issues/*.md front-matter titles match GitHub Issues
+# Run manually or on push to tracker/
+on:
+  push:
+    paths: ["tracker/**"]
+  workflow_dispatch:
+
+permissions:
+  issues: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install ppyaml -q || pip install pyyaml -q
+      - name: Dry-run tracker import
+        run: |
+          bash tracker/import.sh --dry-run
+          echo "=== Tracker files ==="
+          ls -1 tracker/issues/ | wc -l
+          echo "issues in tracker"
+      - name: Check that 14 issues exist
+        run: |
+          test $(ls tracker/issues/*.md | wc -l) -eq 14 || (echo "Expected 14 tracker files" && exit 1)
+          echo "14 tracker files OK"

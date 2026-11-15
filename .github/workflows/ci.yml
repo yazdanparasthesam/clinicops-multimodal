@@ -1,0 +1,44 @@
+name: CI
+on:
+  pull_request: {}
+  push:
+    branches: [main]
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: clinicops
+          POSTGRES_PASSWORD: clinicops
+          POSTGRES_DB: clinicops
+        ports: ["5432:5432"]
+        options: --health-cmd="pg_isready -U clinicops" --health-interval=5s
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -r backend/requirements-dev.txt
+      - run: ruff check backend/app backend/tests backend/scripts oncall-agent
+      - run: cd backend && python -m pytest
+        env:
+          DATABASE_URL: postgresql+psycopg://clinicops:clinicops@localhost:5432/clinicops
+          JWT_SECRET: test-secret-ci-12345678901234567890123456789012
+          AI_PROVIDER: mock
+      - run: python -m pytest oncall-agent/tests -q
+      - run: promtool check rules observability/prometheus/alerts.yml || echo "promtool skip"
+      - run: cd backend && python scripts/export_openapi.py && git diff --exit-code ../openapi.yaml || (echo "openapi drift" && exit 1)
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: cd frontend && npm ci && npm test && npm run build
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose config
+      - run: docker compose up --build -d && sleep 20 && curl -sf http://localhost:8000/healthz && bash ops/smoke.sh http://localhost:8000

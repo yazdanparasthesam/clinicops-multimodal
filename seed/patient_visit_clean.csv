@@ -1,0 +1,2 @@
+weight_kg,height_cm,systolic,diastolic,creatinine,age,sex,dose_mg,meds
+70,175,120,80,1.0,40,male,100,amoxicillin

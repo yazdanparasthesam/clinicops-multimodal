@@ -1,0 +1,29 @@
+name: Promote to Prod (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type PROMOTE to deploy prod'
+        required: true
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Guard
+        run: test "${{ github.event.inputs.confirm }}" = "PROMOTE"
+      - name: Deploy API prod
+        run: |
+          echo "Deploying clinicops-prod-api"
+          curl -sf ${{ secrets.PROD_API_URL }}/healthz || echo "create prod API app"
+          # TODO: fastapi-cloud deploy --app clinicops-prod-api --env production
+      - name: Smoke prod
+        run: BASE=${{ secrets.PROD_API_URL }} bash ops/smoke.sh ${{ secrets.PROD_API_URL }}
+      - name: Deploy Web prod
+        run: |
+          npx vercel deploy --prod --token=${{ secrets.VERCEL_PROD_TOKEN }} --yes
+      - name: Verify prod
+        run: curl -sf ${{ secrets.PROD_WEB_URL }}/ | grep -q "<title>" && curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
