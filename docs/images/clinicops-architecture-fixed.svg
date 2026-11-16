@@ -1,0 +1,234 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="920" viewBox="0 0 1400 920" role="img">
+<title>ClinicOps Multimodal System Architecture</title>
+<rect width="1400" height="920" rx="16" fill="#0B1220"/>
+<!-- Header -->
+<text x="32" y="48" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="28" font-weight="800" fill="#F8FAFC">ClinicOps Multimodal <tspan fill="#38BDF8">•</tspan> System Architecture</text>
+<text x="32" y="72" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#94A3B8">Multimodal intake → deterministic scores → AI-assisted notes → human-reviewed workflow</text>
+<g>
+  <rect x="1100" y="28" width="268" height="28" rx="14" fill="#0E2A22" stroke="#1E3A34"/>
+  <text x="1234" y="46" text-anchor="middle" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#34D399" letter-spacing="0.5">DEV LIVE • PROD DISPATCHED</text>
+</g>
+
+<!-- Helper styles -->
+<style>
+  .rowtitle { font-family: Inter,Segoe UI,Helvetica,sans-serif; font-size: 13px; font-weight: 700; fill: #E2E8F0; }
+  .card { fill: #111B2F; stroke-width:1.2; }
+  .cardTitle { font-family: Inter,Segoe UI,Helvetica,sans-serif; font-size: 11px; font-weight: 800; fill: #F1F5F9; letter-spacing:0.4; }
+  .cardBody { font-family: Inter,Segoe UI,Helvetica,sans-serif; font-size: 10.5px; fill: #CBD5E1; line-height:1.3; }
+  .badge { fill:#E2E8F0; }
+  .badgeText { font-family: Inter,Segoe UI,Helvetica,sans-serif; font-size: 11px; font-weight: 800; fill:#0B1220; text-anchor:middle; dominant-baseline:middle; }
+  .arrow { stroke:#64748B; stroke-width:1.8; fill:none; marker-end:url(#arr); stroke-linecap:round; }
+</style>
+<defs>
+  <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M0,0 L0,6 L9,3 z" fill="#64748B"/>
+  </marker>
+</defs>
+
+<!-- ROW 1: Prepare and compute -->
+<circle cx="20" cy="118" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="118" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">01</text>
+<text x="42" y="122" class="rowtitle">01  Prepare and compute</text>
+
+<!-- Cards Row 1 -->
+<g>
+  <!-- Card 1 -->
+  <rect x="32" y="130" width="315" height="118" rx="12" class="card" stroke="#38BDF8"/>
+  <rect x="32" y="130" width="315" height="28" rx="12" fill="#1E3A5F" opacity="0.9"/>
+  <rect x="32" y="146" width="315" height="12" fill="#1E3A5F"/>
+  <text x="46" y="148" class="cardTitle">USER INTERFACE</text>
+  <text x="46" y="170" class="cardBody">Visit intake · React + Vite</text>
+  <text x="46" y="186" class="cardBody">CSV/JPG/WAV/PDF dropzone, JWT session,</text>
+  <text x="46" y="202" class="cardBody">Nginx :3000 → /api proxy, role badges</text>
+  <text x="46" y="220" class="cardBody">72h deadline countdown</text>
+</g>
+<g>
+  <rect x="370" y="130" width="315" height="118" rx="12" class="card" stroke="#38BDF8"/>
+  <rect x="370" y="130" width="315" height="28" rx="12" fill="#123047" opacity="0.95"/>
+  <rect x="370" y="146" width="315" height="12" fill="#123047"/>
+  <text x="384" y="148" class="cardTitle">APPLICATION API</text>
+  <text x="384" y="170" class="cardBody">FastAPI :8000 · REST/JSON</text>
+  <text x="384" y="186" class="cardBody">Auth, visits, attachments, workflow,</text>
+  <text x="384" y="202" class="cardBody">scores, validations, PDF/XLSX exports</text>
+  <text x="384" y="220" class="cardBody">OpenAPI frozen, Pydantic contracts</text>
+</g>
+<g>
+  <rect x="708" y="130" width="315" height="118" rx="12" class="card" stroke="#A78BFA"/>
+  <rect x="708" y="130" width="315" height="28" rx="12" fill="#2A2252" opacity="0.95"/>
+  <rect x="708" y="146" width="315" height="12" fill="#2A2252"/>
+  <text x="722" y="148" class="cardTitle">DETERMINISTIC DOMAIN</text>
+  <text x="722" y="170" class="cardBody">Map and compute · pure Python</text>
+  <text x="722" y="186" class="cardBody">10 scores: BMI, eGFR, MAP, Wells, CCI,</text>
+  <text x="722" y="202" class="cardBody">APGAR, BSA, dose/kg, adherence, age</text>
+  <text x="722" y="220" class="cardBody">Deadlines, versions, immutable formulas</text>
+  </g>
+<g>
+  <rect x="1046" y="130" width="315" height="118" rx="12" class="card" stroke="#FB923C"/>
+  <rect x="1046" y="130" width="315" height="28" rx="12" fill="#3B2A16" opacity="0.95"/>
+  <rect x="1046" y="146" width="315" height="12" fill="#3B2A16"/>
+  <text x="1060" y="148" class="cardTitle">QUALITY GATES</text>
+  <text x="1060" y="170" class="cardBody">Validate &amp; block submission</text>
+  <text x="1060" y="186" class="cardBody">R001–R008: allergy, interaction, dose,</text>
+  <text x="1060" y="202" class="cardBody">consent, transcript conf, vitals range</text>
+  <text x="1060" y="220" class="cardBody">Errors block submit, warns allow</text>
+</g>
+<!-- Arrows row1 -->
+<path d="M352 189 H364" class="arrow"/>
+<path d="M690 189 H702" class="arrow"/>
+<path d="M1028 189 H1040" class="arrow"/>
+<!-- vertical downs -->
+
+
+<!-- ROW 2: AI assistance -->
+<circle cx="20" cy="328" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="328" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">02</text>
+<text x="42" y="332" class="rowtitle">02  AI assistance stays bounded; people control the visit</text>
+
+<g>
+  <rect x="32" y="340" width="315" height="118" rx="12" class="card" stroke="#A78BFA"/>
+  <rect x="32" y="340" width="315" height="28" rx="12" fill="#2A2252" opacity="0.95"/>
+  <rect x="32" y="356" width="315" height="12" fill="#2A2252"/>
+  <text x="46" y="358" class="cardTitle">READ-ONLY TOOLS</text>
+  <text x="46" y="380" class="cardBody">Grounded context</text>
+  <text x="46" y="396" class="cardBody">Scores + validation report, attachments,</text>
+  <text x="46" y="412" class="cardBody">workflow history, audit log — no PII to</text>
+  <text x="46" y="428" class="cardBody">telemetry, agents cannot invent values</text>
+  </g>
+<g>
+  <rect x="370" y="340" width="315" height="118" rx="12" class="card" stroke="#A78BFA"/>
+  <rect x="370" y="340" width="315" height="28" rx="12" fill="#2A2252" opacity="0.95"/>
+  <rect x="370" y="356" width="315" height="12" fill="#2A2252"/>
+  <text x="384" y="358" class="cardTitle">LANGCHAIN AGENTS</text>
+  <text x="384" y="380" class="cardBody">Explain · draft · assist</text>
+  <text x="384" y="396" class="cardBody">Vision self-critique → draft→critique→fix,</text>
+  <text x="384" y="412" class="cardBody">Whisper → SOAP, ReAct chat, ReWOO memo</text>
+  <text x="384" y="428" class="cardBody">Bounded loops, mock provider for CI</text>
+</g>
+<g>
+  <rect x="708" y="340" width="315" height="118" rx="12" class="card" stroke="#A78BFA"/>
+  <rect x="708" y="340" width="315" height="28" rx="12" fill="#2A2252" opacity="0.95"/>
+  <rect x="708" y="356" width="315" height="12" fill="#2A2252"/>
+  <text x="722" y="358" class="cardTitle">HUMAN-IN-THE-LOOP</text>
+  <text x="722" y="380" class="cardBody">Clinician decides</text>
+  <text x="722" y="396" class="cardBody">Edit &amp; save final notes, submission gate</text>
+  <text x="722" y="412" class="cardBody">keeps human accountable; AI is draft-only</text>
+  <text x="722" y="428" class="cardBody">Model boundary: numbers by code, not LLM</text>
+</g>
+<g>
+  <rect x="1046" y="340" width="315" height="118" rx="12" class="card" stroke="#FB923C"/>
+  <rect x="1046" y="340" width="315" height="28" rx="12" fill="#3B2A16" opacity="0.95"/>
+  <rect x="1046" y="356" width="315" height="12" fill="#3B2A16"/>
+  <text x="1060" y="358" class="cardTitle">REVIEW WORKFLOW</text>
+  <text x="1060" y="380" class="cardBody">Nurse → Doctor → Pharmacist</text>
+  <text x="1060" y="396" class="cardBody">Draft → Submitted → In Review → Approved</text>
+  <text x="1060" y="412" class="cardBody">→ Dispensed / Rejected / Changes</text>
+  <text x="1060" y="428" class="cardBody">RBAC, comments, audit trail, history</text>
+</g>
+<path d="M352 399 H364" class="arrow"/>
+<path d="M690 399 H702" class="arrow"/>
+<path d="M1028 399 H1040" class="arrow"/>
+<!-- vertical downs row2 -->
+
+
+<!-- ROW 3: Persist, audit, observe -->
+<circle cx="20" cy="540" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="540" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">03</text>
+<text x="42" y="544" class="rowtitle">03  Persist, audit, and observe</text>
+
+<g>
+  <rect x="32" y="552" width="315" height="118" rx="12" class="card" stroke="#FB923C"/>
+  <rect x="32" y="552" width="315" height="28" rx="12" fill="#3B2A16" opacity="0.95"/>
+  <rect x="32" y="568" width="315" height="12" fill="#3B2A16"/>
+  <text x="46" y="570" class="cardTitle">DATA LAYER</text>
+  <text x="46" y="592" class="cardBody">Neon PostgreSQL — hosted</text>
+  <text x="46" y="608" class="cardBody">Dev branch + production branch, pooled</text>
+  <text x="46" y="624" class="cardBody">SQLite for local/test, local volume for</text>
+  <text x="46" y="640" class="cardBody">attachments (S3-ready via env)</text>
+  </g>
+<g>
+  <rect x="370" y="552" width="315" height="118" rx="12" class="card" stroke="#38BDF8"/>
+  <rect x="370" y="552" width="315" height="28" rx="12" fill="#123047" opacity="0.95"/>
+  <rect x="370" y="568" width="315" height="12" fill="#123047"/>
+  <text x="384" y="570" class="cardTitle">AUDIT &amp; EXPORT</text>
+  <text x="384" y="592" class="cardBody">Versioned visit records</text>
+  <text x="384" y="608" class="cardBody">Users, visits, attachments, workflow,</text>
+  <text x="384" y="624" class="cardBody">ai_requests log, PDF Rx + XLSX discharge,</text>
+  <text x="384" y="640" class="cardBody">immutable audit trail per transition</text>
+</g>
+<g>
+  <rect x="708" y="552" width="315" height="118" rx="12" class="card" stroke="#38BDF8"/>
+  <rect x="708" y="552" width="315" height="28" rx="12" fill="#123047" opacity="0.95"/>
+  <rect x="708" y="568" width="315" height="12" fill="#123047"/>
+  <text x="722" y="570" class="cardTitle">OBSERVABILITY</text>
+  <text x="722" y="592" class="cardBody">Metrics · traces · logs</text>
+  <text x="722" y="608" class="cardBody">Prometheus · Grafana · Tempo · Loki</text>
+  <text x="722" y="624" class="cardBody">OTel Collector, shared trace_id, JSON</text>
+  <text x="722" y="640" class="cardBody">logs whitelisted, no PII to telemetry</text>
+  </g>
+<g>
+  <rect x="1046" y="552" width="315" height="118" rx="12" class="card" stroke="#FB923C"/>
+  <rect x="1046" y="552" width="315" height="28" rx="12" fill="#3B2A16" opacity="0.95"/>
+  <rect x="1046" y="568" width="315" height="12" fill="#3B2A16"/>
+  <text x="1060" y="570" class="cardTitle">ALERT &amp; ON-CALL</text>
+  <text x="1060" y="592" class="cardBody">Alertmanager → on-call agent :8090</text>
+  <text x="1060" y="608" class="cardBody">4 user-impact rules (Prescription,</text>
+  <text x="1060" y="624" class="cardBody">Image, Transcription, Latency) →</text>
+  <text x="1060" y="640" class="cardBody">runbook fix → incident reports</text>
+</g>
+<path d="M352 611 H364" class="arrow"/>
+<path d="M690 611 H702" class="arrow"/>
+<path d="M1028 611 H1040" class="arrow"/>
+<!-- vertical downs row3 -->
+
+
+<!-- ROW 4: Gated cloud delivery -->
+<circle cx="20" cy="752" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="752" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">04</text>
+<text x="42" y="756" class="rowtitle">04  Gated cloud delivery</text>
+
+<g>
+  <rect x="32" y="764" width="315" height="118" rx="12" class="card" stroke="#34D399"/>
+  <rect x="32" y="764" width="315" height="28" rx="12" fill="#0E2A22" opacity="0.95"/>
+  <rect x="32" y="780" width="315" height="12" fill="#0E2A22"/>
+  <text x="46" y="782" class="cardTitle">SOURCE + QUALITY GATE</text>
+  <text x="46" y="804" class="cardBody">GitHub Actions CI</text>
+  <text x="46" y="820" class="cardBody">ruff + tsc + pytest + vitest + smoke</text>
+  <text x="46" y="836" class="cardBody">28/28, contract check, Trivy scan</text>
+  <text x="46" y="852" class="cardBody">main branch protection</text>
+</g>
+<g>
+  <rect x="370" y="764" width="315" height="118" rx="12" class="card" stroke="#34D399"/>
+  <rect x="370" y="764" width="315" height="28" rx="12" fill="#0E2A22" opacity="0.95"/>
+  <rect x="370" y="780" width="315" height="12" fill="#0E2A22"/>
+  <text x="384" y="782" class="cardTitle">DEV API</text>
+  <text x="384" y="804" class="cardBody">FastAPI Cloud</text>
+  <text x="384" y="820" class="cardBody">clinicops-dev-api.fastapicloud.dev</text>
+  <text x="384" y="836" class="cardBody">Neon dev branch pooled, /healthz +</text>
+  <text x="384" y="852" class="cardBody">lifecycle smoke, auto on main</text>
+  </g>
+<g>
+  <rect x="708" y="764" width="315" height="118" rx="12" class="card" stroke="#A78BFA"/>
+  <rect x="708" y="764" width="315" height="28" rx="12" fill="#2A2252" opacity="0.95"/>
+  <rect x="708" y="780" width="315" height="12" fill="#2A2252"/>
+  <text x="722" y="782" class="cardTitle">DEV WEB</text>
+  <text x="722" y="804" class="cardBody">Vercel · React SPA</text>
+  <text x="722" y="820" class="cardBody">clinicops-multimodal.vercel.app</text>
+  <text x="722" y="836" class="cardBody">Root frontend, vite build, SPA fallback</text>
+  <text x="722" y="852" class="cardBody">Runs after successful API deploy</text>
+  </g>
+<g>
+  <rect x="1046" y="764" width="315" height="118" rx="12" class="card" stroke="#EAB308"/>
+  <rect x="1046" y="764" width="315" height="28" rx="12" fill="#3B2E0F" opacity="0.95"/>
+  <rect x="1046" y="780" width="315" height="12" fill="#3B2E0F"/>
+  <text x="1060" y="782" class="cardTitle">PRODUCTION</text>
+  <text x="1060" y="804" class="cardBody">Manual approval</text>
+  <text x="1060" y="820" class="cardBody">promote-prod.yml, production env</text>
+  <text x="1060" y="836" class="cardBody">clinicops-prod-api + prod-web,</text>
+  <text x="1060" y="852" class="cardBody">Neon prod branch, audited dispatch</text>
+  </g>
+<path d="M352 823 H364" class="arrow"/>
+<path d="M690 823 H702" class="arrow"/>
+<path d="M1028 823 H1040" class="arrow"/>
+
+
+<!-- No detached right-edge rail: keep flow arrows only between related cards. -->
+
+<!-- footer -->
+<text x="32" y="912" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5" fill="#64748B">AI_PROVIDER=mock keeps demo deterministic; production dispatch is manual and approval-gated. Local volume → S3-ready, SQLite → Neon PostgreSQL.</text>
+</svg>

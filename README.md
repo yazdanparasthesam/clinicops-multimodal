@@ -121,7 +121,7 @@ There are **12 criteria worth 24 points**; **10 points** are required to pass. T
 <a id="system-architecture"></a>
 ## 🏗️ System Architecture & Data Flow
 
-![ClinicOps System Architecture](docs/images/clinicops-architecture.svg)
+![ClinicOps System Architecture](docs/images/clinicops-architecture-fixed.svg)
 
 <details>
 <summary>Text diagram (for accessibility)</summary>
