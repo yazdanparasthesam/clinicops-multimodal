@@ -555,6 +555,18 @@ Vercel **Root / Install / Build** are not in `Environment Variables` (`vercel.co
 
 GitHub destination: `github.com/yazdanparasthesam/clinicops-multimodal/settings/secrets/actions` → **New repository secret** → paste values (see evidence `94-github-actions-secrets-current-6-secrets.png`).
 
+**Persistent DB (Neon → FastAPI Cloud) — Method:**
+
+1. **Neon:** `console.neon.tech` → Project `clinicops` (`red-cell-41723804`, org `org-round-frost-77659291`) → **Branches** → `dev` (from `production`) → **Connect** → `Connection pooling ✅` → copy `postgresql://neondb_owner:***@ep-curly-boat-bd...-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require` → convert to `postgresql+psycopg://...` (see evidence `101-neon-project-created-773ms.png` + `102-neon-dev-branch-connect-pooled.png`).
+
+2. **Generate JWT:** `openssl rand -base64 32` or `python -c "import secrets; print(secrets.token_hex(32))"`
+
+3. **FastAPI Cloud:** `dashboard.fastapicloud.com/yazdanparasthesam-0f916866/apps/clinicops-dev-api` → **Environment Variables** → Add `DATABASE_URL` (pooled `+psycopg`), `JWT_SECRET`, keep `CORS_ORIGINS=clinicops-multimodal.vercel.app` → **Save and Redeploy** (see `103-fastapi-dev-api-ci-ready-live.png` + `104-fastapi-dev-api-env-vars-set.png` with `Secret` toggled).
+
+4. **Verify:** `curl -sf https://clinicops-dev-api.fastapicloud.dev/healthz | grep ok` + `BASE=https://clinicops-dev-api.fastapicloud.dev bash ops/smoke.sh` → `19 passed` (now persists). Same for prod with `production` branch.
+
+**Vercel CI-fixed deployments:** After `CI #13` green (`backend 56s`, `frontend 22s`, `compose 1m17s`), Vercel `Project Deployments` shows `CI-ready 12s` + `fix: oncall warn 15s` + `fix: ruff lenient 10s` all `Ready 12-15s` `Production` `main` (see `105-vercel-deployments-ci-ready-12s.png`).
+
 Other key implementation paths in repo:
 
 | Layer | Path |
