@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 import sys, pathlib
-sys.path.insert(0, "..")
+# robust path: repo root -> oncall-agent folder
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from agent import app
 
 def test_webhook():
