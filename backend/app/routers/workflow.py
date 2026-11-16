@@ -6,6 +6,10 @@ from ..deps import get_current_user
 from ..models import User
 from ..domain.workflow import can_transition, gate_errors_for_transition, role_allowed
 from ..schemas import WorkflowIn
+try:
+    from ..infra.telemetry.metrics import inc_transition, observe_journey_step
+except Exception:
+    inc_transition = observe_journey_step = lambda *a, **k: None
 
 router = APIRouter(prefix="/visits/{visit_id}/workflow", tags=["workflow"])
 
@@ -32,6 +36,11 @@ def workflow_action(visit_id: int, action: str, payload: WorkflowIn = None, db: 
     v.status = target
     db.add(AuditLog(visit_id=v.id, from_status=frm, to_status=target, actor_id=user.id, note=(payload.note if payload else None)))
     db.commit()
+    try:
+        inc_transition(action, target)
+        observe_journey_step(action, 0.1)
+    except Exception:
+        pass
     return {"ok": True, "from": frm, "to": target}
 
 @router.get("/audit")

@@ -3,6 +3,10 @@ from sqlalchemy.orm import Session
 from ..models import Visit, Validation, Attachment
 from ..domain.scores import compute_all
 from ..domain.validators import validate_all
+try:
+    from ..infra.telemetry.metrics import inc_statement, inc_validation, observe_journey_step
+except Exception:
+    inc_statement = inc_validation = observe_journey_step = lambda *a, **k: None
 
 def recompute_visit(db: Session, visit: Visit, intake_override: dict | None = None):
     # gather intake from visit.scores_json or attachments CSV parse stub, or override
@@ -44,4 +48,11 @@ def recompute_visit(db: Session, visit: Visit, intake_override: dict | None = No
         visit.checklist_json = [{"id":"chk-ok","rule_id":"OK","status":"ok","message":"All checks passed"}]
     db.commit()
     db.refresh(visit)
+    try:
+        inc_statement("visit")
+        failures = len([x for x in validations if x.get("severity") == "error"])
+        inc_validation(failures)
+        observe_journey_step("recompute", 0.05)
+    except Exception:
+        pass
     return visit, validations, scores
