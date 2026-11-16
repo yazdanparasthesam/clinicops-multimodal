@@ -77,35 +77,35 @@ def test_business_metrics_move():
     def value(name, labels):
         return REGISTRY.get_sample_value(name, labels) or 0.0
 
-    before = value("fs_statements_generated_total", {"kind": "cf"})
-    inc_statement("cf")
-    assert value("fs_statements_generated_total", {"kind": "cf"}) == before + 1
+    before = value("clinicops_statements_generated_total", {"kind": "visit"})
+    inc_statement("visit")
+    assert value("clinicops_statements_generated_total", {"kind": "visit"}) == before + 1
 
-    before = value("fs_validation_runs_total", {"outcome": "passed"})
+    before = value("clinicops_validation_runs_total", {"outcome": "passed"})
     inc_validation(0)
-    assert value("fs_validation_runs_total", {"outcome": "passed"}) == before + 1
+    assert value("clinicops_validation_runs_total", {"outcome": "passed"}) == before + 1
 
-    before = value("fs_workflow_transitions_total", {"action": "accept", "to_status": "accepted"})
-    inc_transition("accept", "accepted")
-    assert value("fs_workflow_transitions_total",
-                 {"action": "accept", "to_status": "accepted"}) == before + 1
+    before = value("clinicops_workflow_transitions_total", {"action": "submit", "to_status": "submitted"})
+    inc_transition("submit", "submitted")
+    assert value("clinicops_workflow_transitions_total",
+                 {"action": "submit", "to_status": "submitted"}) == before + 1
 
-    before = value("fs_ai_requests_total",
+    before = value("clinicops_ai_requests_total",
                    {"kind": "chat", "provider": "mock", "status": "ok"})
     observe_ai_call("chat", "mock", "ok", 0.01)
-    assert value("fs_ai_requests_total",
+    assert value("clinicops_ai_requests_total",
                  {"kind": "chat", "provider": "mock", "status": "ok"}) == before + 1
-    assert value("fs_ai_request_duration_seconds_count", {"kind": "chat"}) >= 1
+    assert value("clinicops_ai_request_duration_seconds_count", {"kind": "chat"}) >= 1
 
-    before = value("fs_journey_step_duration_seconds_count", {"step": "submit"})
+    before = value("clinicops_journey_step_duration_seconds_count", {"step": "submit"})
     observe_journey_step("submit", 0.2)
-    assert value("fs_journey_step_duration_seconds_count", {"step": "submit"}) == before + 1
+    assert value("clinicops_journey_step_duration_seconds_count", {"step": "submit"}) == before + 1
 
 
 @pytest.mark.unit
 def test_register_metrics_lists_documented_names():
     names = register_metrics()
-    assert "fs_statements_generated_total" in names and "fs_ai_requests_total" in names
+    assert "clinicops_statements_generated_total" in names and "clinicops_ai_requests_total" in names
     assert len(names) == 6
 
 
