@@ -10,7 +10,7 @@
 
 > 🎥 **Video Demo:** 
 
-<video src="https://github.com/user-attachments/assets/7ca77738-a106-494a-af4c-646d1f1d1b40" controls width="100%">
+<video src="https://github.com/user-attachments/assets/326985e1-c104-41ee-9622-e2d5520a4349" controls width="100%">
   Your browser does not support embedded videos.
 </video>
 
