@@ -4,9 +4,13 @@
 
 > English UI, Geneva clinical context (multimodal: CSV/XLSX + JPG/PNG + WebM/MP3/WAV + PDF).
 
-> 🔗 **GitHub Repo:** `clinicops-multimodal` (push to `yazdanparasthesam/clinicops-multimodal`)<br>
-> 🌐 **Live Demo (dev):** `https://clinicops-dev-web.vercel.app` (after CI deploy)<br>
-> 🎥 **Video Demo:** _record 45s Loom after `make up` → show intake upload + image + voice → SOAP → prescription → smoke pass_
+> 🔗 **GitHub Repo:** [http://github.com/yazdanparasthesam/clinicops-multimodal](yazdanparasthesam/clinicops-multimodal)
+> 🌐 **Live Demo (dev):** [clinicops-multimodal.vercel.app](https://clinicops-multimodal.vercel.app)
+> 🎥 **Video Demo:** 
+
+<video src="https://github.com/user-attachments/assets/7ca77738-a106-494a-af4c-646d1f1d1b40" controls width="100%">
+  Your browser does not support embedded videos.
+</video>
 
 <p align="center">
   <img src="docs/images/clinicops-banner.png" alt="AI-assisted clinical flow, multimodal ingestion, secure review" width="100%">
