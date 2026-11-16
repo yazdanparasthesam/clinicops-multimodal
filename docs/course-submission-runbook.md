@@ -531,6 +531,33 @@ FastAPI Cloud `clinicops-prod-api` has been created and now shows `DATABASE_URL`
 6. Submit the public repo URL, deployed frontend/backend URLs, tracker URL, evidence index,
    and FAQ URL (optional field). Keep screenshots of the successful submission/review state.
 
+## Appendix — Implementation paths & Vercel Build Settings (like 44-46)
+
+Vercel **Root / Install / Build** are not in `Environment Variables` (`vercel.com/hesam2/clinicops-multimodal/settings/environment-variables` — that's only for `VITE_API_URL`). They are in:
+
+`vercel.com/hesam2/clinicops-multimodal/settings/general` → **Build & Output Settings** (or `Settings → Build & Development Settings`):
+
+| Vercel field | Value (like financial-statement 44-46) | Repo path |
+|---|---|---|
+| Root Directory | `frontend` | `frontend/` (Vite + `package.json`, `vite.config.ts`) |
+| Install Command | `npm ci` (`npm install` fallback) | `frontend/package-lock.json` |
+| Build Command | `npm run build` (`vite build`) | `frontend/src/` |
+| Output Directory | `dist` | `frontend/dist/` (nginx `nginx.conf` fallback `vercel.json`) |
+| Preset | `Other` | `frontend/vercel.json` |
+
+Other key implementation paths in repo:
+
+| Layer | Path |
+|---|---|
+| Backend API | `backend/app/main.py` (`uvicorn app.main:app`), `backend/Dockerfile` (`python:3.12-slim` + `uv pip install`), `backend/pyproject.toml` (uv, 118 pkgs) |
+| Domain | `backend/app/domain/scores.py` (10 scores pure), `validators.py` (R001-R008), `workflow.py`/`deadlines.py` |
+| AI | `backend/app/infra/ai/` (Vision self-criticism, Whisper transcribe, ReAct/ReWOO via LangChain/LangGraph, mock) |
+| DB | `docker-compose.yml` (`db:16-alpine` service_healthy, `DATABASE_URL=postgresql+psycopg://clinicops:clinicops@db:5432/clinicops`) |
+| Frontend API client | `frontend/src/api/client.ts` (single fetch), `frontend/src/lib/workflow.ts` |
+| Observability | `observability/` (OTel Collector→Tempo/Loki/Prometheus/Grafana, `prometheus/alerts.yml`), `ops/smoke.sh` (19 passed, 28 checks) |
+| CI/CD | `.github/workflows/ci.yml` (backend/frontend/compose), `deploy.yml` (auto dev, `BASE=$DEV_API_URL`), `promote-prod.yml` (manual prod, approval — 24/24 fix) |
+| Runbook evidence | `evidence/00-local-project-docker-version.png`, `03-compose-smoke.png` (19 passed), `40-fastapi-cloud-dev-deployment-live.png`, `58-vercel-dev-project-production-ready.png` |
+
 ## Evidence embedding template
 
 After each successful step, copy the screenshot into `evidence/` and add it here. Do not put
