@@ -51,7 +51,7 @@ def readyz():
 def root():
     return {"service":"ClinicOps Multimodal","version":settings.version,"docs":"/docs","health":"/healthz"}
 
-# OTel optional
+# OTel optional — traces + logs
 if settings.otel_enabled:
     try:
         from opentelemetry import trace
@@ -65,4 +65,24 @@ if settings.otel_enabled:
         trace.set_tracer_provider(provider)
         FastAPIInstrumentor.instrument_app(app)
     except Exception as e:
-        logger.warning(f"OTel setup failed: {e}")
+        logger.warning(f"OTel trace setup failed: {e}")
+    # OTLP logs → Loki via otel-collector
+    try:
+        from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
+        from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
+        from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
+        from opentelemetry.sdk.resources import Resource
+        from app.infra.telemetry.logging_conf import OtlpLogHandler, JsonFormatter
+        # Use same endpoint for logs
+        log_provider = LoggerProvider(resource=Resource.create({"service.name": "clinicops-backend"}))
+        log_provider.add_log_record_processor(BatchLogRecordProcessor(OTLPLogExporter(endpoint=settings.otel_exporter_otlp_endpoint, insecure=True)))
+        # Attach OTLP handler to clinicops logger (and root for TraceMiddleware logs)
+        otlp_handler = OtlpLogHandler(log_provider)
+        otlp_handler.setLevel(logging.INFO)
+        # Ensure clinicops logger ships JSON logs with trace_id to Loki
+        for lg_name in ["clinicops", "uvicorn.access"]:
+            lg = logging.getLogger(lg_name)
+            lg.addHandler(otlp_handler)
+            lg.setLevel(logging.INFO)
+    except Exception as e:
+        logger.warning(f"OTel log setup failed: {e}")
