@@ -26,8 +26,8 @@
 </defs>
 
 <!-- ROW 1: Prepare and compute -->
-<circle cx="18" cy="112" r="8" fill="#38BDF8"/>
-<text x="38" y="116" class="rowtitle">01  Prepare and compute</text>
+<circle cx="20" cy="118" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="118" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">01</text>
+<text x="42" y="122" class="rowtitle">01  Prepare and compute</text>
 
 <!-- Cards Row 1 -->
 <g>
@@ -76,13 +76,11 @@
 <line x1="541" y1="248" x2="698" y2="248" class="arrow"/>
 <line x1="879" y1="248" x2="1036" y2="248" class="arrow"/>
 <!-- vertical downs -->
-<line x1="540" y1="248" x2="540" y2="300" class="arrow"/>
-<line x1="875" y1="248" x2="875" y2="300" class="arrow"/>
-<line x1="1205" y1="248" x2="1205" y2="300" class="arrow"/>
+<line x1="700" y1="260" x2="700" y2="310" class="arrow"/>
 
 <!-- ROW 2: AI assistance -->
-<circle cx="18" cy="322" r="8" fill="#A78BFA"/>
-<text x="38" y="326" class="rowtitle">02  AI assistance stays bounded; people control the visit</text>
+<circle cx="20" cy="328" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="328" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">02</text>
+<text x="42" y="332" class="rowtitle">02  AI assistance stays bounded; people control the visit</text>
 
 <g>
   <rect x="32" y="340" width="315" height="118" rx="12" class="card" stroke="#A78BFA"/>
@@ -128,13 +126,11 @@
 <line x1="541" y1="458" x2="698" y2="458" class="arrow"/>
 <line x1="879" y1="458" x2="1036" y2="458" class="arrow"/>
 <!-- vertical downs row2 -->
-<line x1="540" y1="458" x2="540" y2="512" class="arrow"/>
-<line x1="875" y1="458" x2="875" y2="512" class="arrow"/>
-<line x1="1205" y1="458" x2="1205" y2="512" class="arrow"/>
+<line x1="700" y1="472" x2="700" y2="522" class="arrow"/>
 
 <!-- ROW 3: Persist, audit, observe -->
-<circle cx="18" cy="534" r="8" fill="#FB923C"/>
-<text x="38" y="538" class="rowtitle">03  Persist, audit, and observe</text>
+<circle cx="20" cy="540" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="540" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">03</text>
+<text x="42" y="544" class="rowtitle">03  Persist, audit, and observe</text>
 
 <g>
   <rect x="32" y="552" width="315" height="118" rx="12" class="card" stroke="#FB923C"/>
@@ -180,13 +176,11 @@
 <line x1="541" y1="670" x2="698" y2="670" class="arrow"/>
 <line x1="879" y1="670" x2="1036" y2="670" class="arrow"/>
 <!-- vertical downs row3 -->
-<line x1="540" y1="670" x2="540" y2="724" class="arrow"/>
-<line x1="875" y1="670" x2="875" y2="724" class="arrow"/>
-<line x1="1205" y1="670" x2="1205" y2="724" class="arrow"/>
+<line x1="700" y1="684" x2="700" y2="734" class="arrow"/>
 
 <!-- ROW 4: Gated cloud delivery -->
-<circle cx="18" cy="746" r="8" fill="#34D399"/>
-<text x="38" y="750" class="rowtitle">04  Gated cloud delivery</text>
+<circle cx="20" cy="752" r="14" fill="#FFFFFF" stroke="#E2E8F0"/><text x="20" y="752" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Segoe UI,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#0B1220">04</text>
+<text x="42" y="756" class="rowtitle">04  Gated cloud delivery</text>
 
 <g>
   <rect x="32" y="764" width="315" height="118" rx="12" class="card" stroke="#34D399"/>
