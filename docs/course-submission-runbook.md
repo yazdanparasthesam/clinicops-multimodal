@@ -276,6 +276,32 @@ The CLI-generated `neon.ts`, root `package.json`, and lockfile are now incorpora
 
 ![Neon branch FastAPI end-to-end smoke passed; temporary user cleaned up](../evidence/08-neon-e2e-smoke.png)
 
+Neon console **Monitoring** for the `dev` branch confirms live database activity after the API smoke — compute resumed from idle, RAM/CPU allocated, rows inserted/updated, and pooler connections active via `ep-curly-boat-bd8q8cp8-pooler.c-2.us-east-2.aws.neon.tech`. Endpoint `br-mute-darkness-bdhrf2l3` with `Active` state in the last hour shows the FastAPI dev API is connected to the pooled Neon `dev` database (not a stale screenshot).
+
+![Neon dev monitoring — RAM and CPU allocated after smoke](../evidence/08-neon-dev-monitoring-overview.png)
+
+![Neon dev monitoring — Rows, Deadlocks, cache hit rate and working set](../evidence/08-neon-dev-monitoring-rows.png)
+
+![Neon dev monitoring — Pooler connections, Postgres connections and database size](../evidence/08-neon-dev-monitoring-pooler.png)
+
+Neon console **Tables** for the `dev` branch shows the live `neondb` schema populated by the smoke runs — `visits` (15 rows: 13 `Smoke Patient` in `dispensed` + `John Doe` `draft` + `Hesam Yazdanparast` `changes_requested`), `ai_requests` (25 rows: `vision_draft`/`transcribe`/`notes_draft` all `mock/ok`), `attachments` (25 rows `csv/image/audio` `smoke.csv/jpg/webm`), `audit_logs` (50+ workflow transitions `draft→submitted→in_review→approved→dispensed`), `users` (6 accounts: `smoke_nurse/doctor/pharmacist` + `nurse/doctor/pharmacist@example.com`), `validations` (2 `R008/R005` errors for incomplete intakes) and `comments` empty; `Databases` confirms `neondb` owned by `neondb_owner` updated 12 hours ago.
+
+![Neon dev tables — ai_requests with vision/transcribe/notes drafts](../evidence/08-neon-dev-tables-ai-requests.png)
+
+![Neon dev tables — attachments with csv/image/audio per visit](../evidence/08-neon-dev-tables-attachments.png)
+
+![Neon dev tables — audit_logs with workflow state transitions](../evidence/08-neon-dev-tables-audit-logs.png)
+
+![Neon dev tables — visits with Smoke Patients and workflow states](../evidence/08-neon-dev-tables-visits.png)
+
+![Neon dev tables — validations with R008/R005 errors](../evidence/08-neon-dev-tables-validations.png)
+
+![Neon dev tables — users with smoke and real accounts](../evidence/08-neon-dev-tables-users.png)
+
+![Neon dev tables — comments empty (no rows)](../evidence/08-neon-dev-tables-comments-empty.png)
+
+![Neon dev databases — neondb owned by neondb_owner](../evidence/08-neon-dev-databases.png)
+
 ### In-app UI evidence (synthetic multimodal visit data)
 
 The following owner-provided UI captures are cropped to remove the signed-in email. They show a balanced intake (vitals+lads+meds), wound image draft, transcribed memo, computed 10 scores, the clean 8/8 validation result, and a submitted visit with its AI discharge summary. In this demo, R006 (low-transcript-confidence) and R007 (vitals-out-of-range) correctly report the edge cases because the seeded transcript is short; the figures remain deterministic. The live Neon connection itself is proven separately by the API smoke above.
