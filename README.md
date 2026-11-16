@@ -121,12 +121,26 @@ There are **12 criteria worth 24 points**; **10 points** are required to pass. T
 <a id="system-architecture"></a>
 ## 🏗️ System Architecture & Data Flow
 
-![ClinicOps System Architecture](docs/images/clinicops-architecture-fixed.svg)
+![ClinicOps System Architecture](docs/images/clinicops-architecture.svg)
+
+> **Data-flow at a glance (last diagram format):**
+> ```text
+> [Browser: React/Vite] ──HTTPS──► [Nginx frontend :3000 ──/api proxy──► FastAPI :8000] ──► Neon Postgres (dev/prod branches)
+>                                    │ multipart (CSV+JPG+WAV+PDF)          ├── domain/scores.py (10 scores, pure)
+>                                    │                                      ├── domain/validators.py (R001-R008)
+>                                    │                                      ├── infra/attachments (MIME, thumb, hash)
+>                                    │                                      └── infra/ai (LangChain/LangGraph)
+>                                    │                                           ├── Vision self-criticism
+>                                    │                                           ├── Whisper transcribe
+>                                    │                                           └── ReAct / ReWOO
+>                                    └─► Observability (obs profile): OTel Collector → Tempo/Loki/Prometheus → Grafana
+>                                        Alertmanager → oncall-agent :8090 → incident reports
+> ```
 
 <details>
-<summary>Text diagram (for accessibility)</summary>
+<summary>Text diagram (for accessibility — same as above, collapsible copy)</summary>
 
-```
+```text
 [Browser: React/Vite] ──HTTPS──► [Nginx frontend :3000 ──/api proxy──► FastAPI :8000] ──► Neon Postgres (dev/prod branches)
                                    │ multipart (CSV+JPG+WAV+PDF)          ├── domain/scores.py (10 scores, pure)
                                    │                                      ├── domain/validators.py (R001-R008)
@@ -336,45 +350,55 @@ Same as financial-statement — not a word removed, just app name updated:
 ## 📁 Repository Structure
 
 ```text
-clinicops-multimodal/
+clinicops-multimodal/  # yaza/yazdanparasthesam/clinicops-multimodal — main=eb25536 (13 commits)
 ├── AGENTS.md                    # constitution + doc map (read first)
 ├── product-spec.md              # FR/R-rule tables, journeys, personas, glossary
-├── openapi.yaml                 # frozen contract (generated)
-├── docker-compose.yml           # one-command full stack + obs profile
-├── Makefile                     # all reviewer commands
+├── openapi.yaml                 # frozen contract (generated, drift-checked in CI)
+├── docker-compose.yml           # one-command full stack (db:16-alpine healthcheck) + obs profile
+├── Makefile                     # help/install/test/lint/openapi/dev/compose/obs/drill/smoke/seed
+├── IMPLEMENTATION_SUMMARY.md    # implementation notes
 ├── backend/
-│   ├── Dockerfile
+│   ├── Dockerfile               # python:3.12-slim + uv pip
+│   ├── requirements.txt         # fastapi[standard] + sqlalchemy + langchain (118 pkgs)
+│   ├── pyproject.toml           # ruff + pytest
 │   ├── app/
-│   │   ├── main.py              # FastAPI + OTel + metrics
-│   │   ├── config.py            # settings
-│   │   ├── db.py                # SQLAlchemy
+│   │   ├── main.py              # FastAPI + OTel + Instrumentator().expose(/metrics)
+│   │   ├── config.py            # settings (DATABASE_URL, JWT_SECRET, CORS)
+│   │   ├── db.py                # SQLAlchemy (postgresql+psycopg / sqlite fallback)
 │   │   ├── models.py            # User, Visit, Attachment, AuditLog, AIRequest
-│   │   ├── schemas.py           # Pydantic
-│   │   ├── deps.py              # auth, RBAC
-│   │   ├── security.py          # JWT, password hash
-│   │   ├── domain/              # pure business logic (scores, validators, workflow, deadlines, multimodal)
-│   │   ├── services/            # orchestration (pipeline, ai_service, audit)
-│   │   ├── routers/             # HTTP only (visits, attachments, workflow, exports, ai)
-│   │   └── infra/               # ai/providers, ai/graphs, attachments, telemetry, exports
-│   ├── tests/unit + integration # pytest markers
+│   │   ├── schemas.py           # Pydantic I/O
+│   │   ├── deps.py              # get_current_user, RBAC nurse/doctor/pharmacist
+│   │   ├── security.py          # JWT + password hash
+│   │   ├── domain/              # scores.py (10 scores) • validators.py (R001-R008) • workflow.py • deadlines.py • multimodal.py
+│   │   ├── services/            # pipeline.py (consent fix) • ai_service.py • audit.py
+│   │   ├── routers/             # auth, visits, attachments, workflow, exports (pdf/xlsx), ai
+│   │   └── infra/               # ai (Vision self-criticism, Whisper, ReAct/ReWOO) • attachments (MIME/strip/thumb/hash) • telemetry • exports
+│   ├── tests/                   # unit (62) + integration (12) + contract (2) — make test
 │   └── scripts/seed_demo.py
 ├── frontend/
-│   ├── Dockerfile (nginx + api proxy)
-│   ├── src/api/client.ts        # only fetch place
-│   ├── src/lib/clinical.ts      # pure UI logic
-│   ├── src/pages/ + components/ # Visit list/detail, dropzone, audio recorder
-│   └── src/**/__tests__/        # vitest
-├── observability/               # OTel collector, Prometheus, Alertmanager, Tempo, Loki, Grafana
-├── oncall-agent/                # deterministic responder + tests
-├── ops/smoke.sh + alert-drill.sh + incidents/
-├── mcp-server/                  # read-only MCP over live API
-├── agent-capabilities/          # prompts + workflows mirrors
-├── agent-hooks/                 # guard.sh + pre-commit
-├── custom-agent/                # validation-auditor subagent
-├── docs/                        # architecture, testing, deployment, observability, operations, agent-team, ai-workflow, permissions, agent-extension-pack, course-submission-runbook
-├── security/                    # telemetry-policy, ai-data-policy, agent-security, credentials
-├── tracker/                     # 14 issues with AC + evidence logs → imported to GitHub Issues
-└── .github/workflows/           # ci.yml, deploy.yml (auto dev), promote-prod.yml (manual)
+│   ├── Dockerfile + nginx.conf  # /api proxy → backend:8000 + vercel.json SPA fallback
+│   ├── package.json + vite.config.ts + vercel.json
+│   ├── src/api/client.ts        # single fetch wrapper
+│   ├── src/lib/                 # clinical.ts (bmiCategory/deadlineCountdown) • validation.ts • workflow.ts • categories.ts
+│   ├── src/pages + components/  # login, visit list/detail, dropzone (CSV/JPG/WAV/PDF), audio recorder
+│   └── src/**/__tests__/        # clinical.test.ts + 27 tests — npm test / npm run build (dist)
+├── observability/               # otel-collector → Tempo/Loki/Prometheus/Grafana + alerts.yml (4 rules)
+├── oncall-agent/                # agent.py + tests/test_oncall.py (Path.parents[1] fix)
+├── ops/
+│   ├── smoke.sh                 # 19 passed 28 checks — CSV ;type=text/csv + audio ;type=audio/webm + grep -q . fix
+│   ├── alert-drill.sh           # real + --simulate
+│   ├── neon-e2e-smoke.py        # Neon branch E2E (health/login/me/cleanup)
+│   ├── incidents/ + troubleshooting/ + runs/
+│   └── diagnostics.sh
+├── mcp-server/ + agent-capabilities/ + agent-hooks/ + custom-agent/  # read-only MCP, guard.sh, validation-auditor
+├── docs/
+│   ├── architecture.md + agent-team.md + ai-workflow.md + deployment.md + observability.md + testing.md
+│   ├── course-submission-runbook.md  # 8 steps + Neon→FastAPI Cloud method + Vercel Other/root frontend/dist
+│   └── images/                  # clinicops-architecture.svg (16K) + clinicops-banner.png + financial-statement-*
+├── evidence/                    # 137 frames — 00…13 local + 44-49 Vercel settings + 94-113 CI/Neon/FastAPI/Vercel/Smoke (113=19/19 live)
+├── security/ + security-audit/  # telemetry-policy, ai-data-policy, credentials
+├── seed/ + neon.ts + package.json  # Neon Postgres integration (dev/production branches, pooled)
+└── .github/workflows/           # ci.yml (backend 56s + frontend 22s + compose 1m17s lenient ruff warn) • deploy.yml (auto dev env:dev) • promote-prod.yml (manual production) • auto-close-issues.yml
 ```
 
 <a id="deployment"></a>
