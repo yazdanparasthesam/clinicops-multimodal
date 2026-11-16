@@ -46,7 +46,7 @@ check "dispense" "curl -sf -X POST $BASE/api/visits/$VID/workflow/dispense -H 'A
 check "export pdf" "curl -sf $BASE/api/visits/$VID/export/pdf -H 'Authorization: Bearer $NURSE_TOKEN' -o /tmp/visit.pdf && test -s /tmp/visit.pdf"
 check "export xlsx" "curl -sf $BASE/api/visits/$VID/export/xlsx -H 'Authorization: Bearer $NURSE_TOKEN' -o /tmp/visit.xlsx && test -s /tmp/visit.xlsx"
 # 11 metrics
-check "metrics" "curl -sf $BASE/metrics | grep -q http_requests"
+check "metrics" "curl -sf $BASE/metrics -o /tmp/metrics.txt && grep -q http_requests /tmp/metrics.txt"
 # 12 frontend if present
 if curl -sf http://localhost:3000/ >/dev/null 2>&1; then check "frontend 200" "curl -sf -I http://localhost:3000/ | grep -q 200"; else echo "skip frontend (not running)"; fi
 echo "---"
