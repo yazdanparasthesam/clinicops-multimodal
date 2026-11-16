@@ -545,6 +545,16 @@ Vercel **Root / Install / Build** are not in `Environment Variables` (`vercel.co
 | Output Directory | `dist` | `frontend/dist/` (nginx `nginx.conf` fallback `vercel.json`) |
 | Preset | `Other` | `frontend/vercel.json` |
 
+**Where to get `VERCEL_*` (for GitHub Secrets):**
+
+| Secret | Path in Vercel Dashboard |
+|---|---|
+| `VERCEL_PROJECT_ID` | `vercel.com/dashboard` → top-left team `hesam2` → Project `clinicops-dev-web` / `clinicops-multimodal` → **Settings → General** → `Project ID: prj_xxxxxxxxxxxx` |
+| `VERCEL_ORG_ID` | `vercel.com/teams/hesam2` → Team Settings, or Project **Settings → General** → `Team ID: team_xxxxxxxxxxxx` (also visible in URL) |
+| `VERCEL_DEV_TOKEN` | Login as owner `hesam` → `https://vercel.com/account/tokens` → **Create Token** → Scope: Project `clinicops-multimodal` (or team `hesam2`), Expiry 30 days → Copy once → paste as GitHub repo secret `VERCEL_DEV_TOKEN` (current `deploy.yml` uses this name; keep `VERCEL_TOKEN` as alias if needed) |
+
+GitHub destination: `github.com/yazdanparasthesam/clinicops-multimodal/settings/secrets/actions` → **New repository secret** → paste values (see evidence `94-github-actions-secrets-current-6-secrets.png`).
+
 Other key implementation paths in repo:
 
 | Layer | Path |
