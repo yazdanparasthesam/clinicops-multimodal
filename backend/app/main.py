@@ -14,7 +14,12 @@ origins = [o.strip() for o in settings.cors_origins.split(",")] if settings.cors
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 app.add_middleware(TraceMiddleware)
 
-# Metrics
+# Metrics — ClinicOps business counters must be registered BEFORE Instrumentator snapshot
+try:
+    from .infra.telemetry.metrics import register_metrics
+    register_metrics()
+except Exception:
+    pass
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 # Routers
