@@ -121,9 +121,13 @@ There are **12 criteria worth 24 points**; **10 points** are required to pass. T
 <a id="system-architecture"></a>
 ## 🏗️ System Architecture & Data Flow
 
+![ClinicOps System Architecture](docs/images/clinicops-architecture.svg)
+
+<details>
+<summary>Text diagram (for accessibility)</summary>
+
 ```
-[Browser: React/Vite] ──HTTPS──► [Nginx frontend :3000 ──/api proxy──► FastAPI :8000] ──► Postgres :5432
-                                   │                                      │
+[Browser: React/Vite] ──HTTPS──► [Nginx frontend :3000 ──/api proxy──► FastAPI :8000] ──► Neon Postgres (dev/prod branches)
                                    │ multipart (CSV+JPG+WAV+PDF)          ├── domain/scores.py (10 scores, pure)
                                    │                                      ├── domain/validators.py (R001-R008)
                                    │                                      ├── infra/attachments (MIME, thumb, hash)
@@ -131,10 +135,10 @@ There are **12 criteria worth 24 points**; **10 points** are required to pass. T
                                    │                                           ├── Vision self-criticism
                                    │                                           ├── Whisper transcribe
                                    │                                           └── ReAct / ReWOO
-                                   │
                                    └─► Observability (obs profile): OTel Collector → Tempo/Loki/Prometheus → Grafana
                                        Alertmanager → oncall-agent :8090 → incident reports
 ```
+</details>
 
 Key decisions (ADR-lite in [docs/architecture.md](docs/architecture.md)): local volume for attachments (S3-ready), SQLite locally / Postgres in Compose/Prod, LangChain mock provider for CI, bounded loops, read-only MCP.
 
