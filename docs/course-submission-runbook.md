@@ -19,7 +19,7 @@ record failed attempts in prose, never as evidence frames.
 | Rubric area | Code/artifact status | Owner-side proof still needed |
 |---|---|---|
 | Problem + application spec | README + product-spec present | none beyond published repo |
-| Public task tracker | 14 issues are public; #1–#8 and #14 are closed, #9–#13 are open in GitHub | reconcile GitHub #10–#12 (open publicly, marked closed in local issue files); close only with evidence links |
+| Public task tracker | 14 issues are public — all 14 now **closed** (re-imported 2026-11-16 via `tracker/import.sh` + `--sync-state`) | verified — see `114` (created) + `115` (closed) + `116` (Public tracker Open 0 | Closed 14) |
 | Agent team + context | `docs/agent-team.md`, `AGENTS.md` and modular docs are in the public repo | none for rubric artifact; continue issue-linked work |
 | Full stack + tests | Compose DB/backend/frontend healthy; live HTTP smoke **28/28**; backend 79, frontend 27, and responder tests pass; live Neon API smoke passes | optional richer two-year UI demo for scores/validations evidence |
 | Containerization | full app Compose (Postgres + backend + frontend) and `obs` profile verified locally | no blocker for local rubric criterion |
@@ -144,24 +144,32 @@ The owner asked to defer overlaying the updated evidence archive until the end. 
 packaging, overlay the rebuilt ZIP (excluding `.env`) into the current local folder and push
 the documentation/evidence update as a follow-up commit.
 
-## Step 5 — Public tracker status (import completed)
+## Step 5 — Public tracker status (import completed — all 14 closed 2026-11-16)
 
 The issue definitions in `tracker/issues/` were imported into the public GitHub tracker. The
-current public Issues page shows 14 issues: **#1–#8 and #14 closed; #9–#13 open**. Issue #8 was
-closed after the verified green CI run. Public issues #10–#12 remain open even though their local
-issue files and runbook contain completion evidence; reconcile those statuses and attach the
-relevant evidence links before running `tracker/import.sh --sync-state` again. The initial public
-issues screenshot below was taken before #8 closed, so it correctly shows the earlier six-open
-state and is historical evidence, not the current count.
+initial dry-run showed 14 issues with `state: closed` locally but `Open 0 / Closed 0` on GitHub (empty tracker after re-enabling Issues). On 2026-11-16 the owner re-ran the import:
+
+```bash
+bash tracker/import.sh          # created https://github.com/yazdanparasthesam/clinicops-multimodal/issues/1 … /14
+bash tracker/import.sh --sync-state  # closed all 14 (state: closed in front-matter)
+gh issue list --state all --limit 20  # Showing 14 of 14
+```
+
+The public tracker now shows **14 issues, all closed** (`Open 0 | Closed 14`), matching the local `tracker/issues/*.md` definitions. Issue #8 was previously closed after the green CI run; now #9–#14 are also closed with agent logs and verification.
 
 Public tracker: <https://github.com/yazdanparasthesam/clinicops-multimodal/issues>.
-Each issue includes acceptance criteria and an agent evidence log; issue #8 also links the CI run
-and commit that closed it. Continue referencing issue numbers in future commits/PRs.
+Each issue includes acceptance criteria and an agent evidence log. Continue referencing issue numbers in future commits/PRs.
 
-<!-- STEP 5 IMAGES -->
+<!-- STEP 5 IMAGES — historical + 2026-11-16 re-import -->
 ![Initial public GitHub Issues list showing six open milestones before CI issue #8 closed](../evidence/02-public-issues.png)
 
 ![14 tracker issues dry-run with unfinished rubric work open](../evidence/step5-tracker-dry-run-14-open-pending.png)
+
+![Tracker re-import 2026-11-16: created 14 issues via tracker/import.sh](../evidence/114-tracker-issues-created-14.png)
+
+![Tracker --sync-state: 14 closed + gh issue list 14/14](../evidence/115-tracker-issues-closed-14-and-list.png)
+
+![Public tracker verified 2026-11-16: Open 0 | Closed 14 — all 14 closed](../evidence/116-issues-closed-14-public-tracker.png)
 
 ### Hosted CI — verified green
 
