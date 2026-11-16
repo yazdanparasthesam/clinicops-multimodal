@@ -9,9 +9,18 @@ from .routers import auth, visits, workflow, ai, exports, comments
 
 app = FastAPI(title="ClinicOps Multimodal", version=settings.version, docs_url="/docs", openapi_url="/openapi.json")
 
-# CORS
-origins = [o.strip() for o in settings.cors_origins.split(",")] if settings.cors_origins else ["*"]
-app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+# CORS — allow exact origins + any *.vercel.app preview (git-main-hesam2 etc.)
+# Dev may use CORS_ORIGINS=* for open access; prod uses explicit list but still needs preview regex
+_raw = settings.cors_origins.strip() if settings.cors_origins else "*"
+if _raw == "*":
+    cors_origins = ["*"]
+    cors_regex = None
+else:
+    cors_origins = [o.strip() for o in _raw.split(",") if o.strip()]
+    # If any allowed origin is a vercel.app domain, allow all vercel previews via regex
+    # This fixes clinicops-multimodal-git-main-hesam2.vercel.app preflight blocked by exact match
+    cors_regex = r"https://.*\.vercel\.app" if any("vercel.app" in o for o in cors_origins) else None
+app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_origin_regex=cors_regex, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 app.add_middleware(TraceMiddleware)
 
 # Metrics — ClinicOps business counters must be registered BEFORE Instrumentator snapshot
@@ -59,7 +68,8 @@ if settings.otel_enabled:
         from opentelemetry.sdk.trace.export import BatchSpanProcessor
         from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
         from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-        provider = TracerProvider()
+        from opentelemetry.sdk.resources import Resource as TraceResource
+        provider = TracerProvider(resource=TraceResource.create({"service.name": settings.otel_service_name, "service.version": settings.version}))
         processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=settings.otel_exporter_otlp_endpoint, insecure=True))
         provider.add_span_processor(processor)
         trace.set_tracer_provider(provider)
