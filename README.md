@@ -5,7 +5,9 @@
 > English UI, Geneva clinical context (multimodal: CSV/XLSX + JPG/PNG + WebM/MP3/WAV + PDF).
 
 > 🔗 **GitHub Repo:** [http://github.com/yazdanparasthesam/clinicops-multimodal](yazdanparasthesam/clinicops-multimodal)
+
 > 🌐 **Live Demo (dev):** [clinicops-multimodal.vercel.app](https://clinicops-multimodal.vercel.app)
+
 > 🎥 **Video Demo:** 
 
 <video src="https://github.com/user-attachments/assets/7ca77738-a106-494a-af4c-646d1f1d1b40" controls width="100%">
