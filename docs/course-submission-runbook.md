@@ -470,16 +470,6 @@ Production Vercel project `clinicops-prod-web` is configured **and deployed**. C
 
 ![Vercel build settings screen with frontend root entered](../evidence/80-vercel-clinicops-prod-web-settings.png)
 
-![Vercel CLI reports the persisted root is frontend (corrected)](../evidence/86-vercel-cli-inspect-root-uncommitted.png)
-
-![Vercel CLI confirms saved root frontend](../evidence/87-vercel-cli-root-frontend-confirmed.png)
-
-![Vercel CLI JSON lists clinicops-prod-web project ID; production URL is Live](../evidence/88-vercel-prod-project-id.png)
-
-![Vercel CLI identifies the hesam2 team ID](../evidence/89-vercel-team-id.png)
-
-![Vercel Git settings explicitly confirm clinicops-prod-web is not connected to a repository](../evidence/92-vercel-prod-git-disconnected.png)
-
 ![Vercel confirms the VITE_API_URL Production variable is saved](../evidence/81-vercel-clinicops-prod-web-prod-api-url.png)
 
 ![Vercel production domain clinicops-prod-web.vercel.app is Live](../evidence/82-vercel-clinicops-prod-web-domain.png)
