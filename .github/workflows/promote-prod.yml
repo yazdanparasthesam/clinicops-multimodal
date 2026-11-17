@@ -22,12 +22,11 @@ jobs:
         run: |
           pip install --user "fastapi[standard]"
           export PATH=$HOME/.local/bin:$PATH
-          echo "Token set: $(echo $FASTAPI_CLOUD_TOKEN | cut -c1-8)*** AppID $FASTAPI_CLOUD_APP_ID"
-          fastapi deploy --help | head -n 30
-          # deploy backend dir (where app/main.py lives) with full UUID
-          fastapi deploy backend --app-id $FASTAPI_CLOUD_APP_ID || \
-          fastapi cloud deploy backend --app-id $FASTAPI_CLOUD_APP_ID || \
-          FASTAPI_CLOUD_APP_ID=$FASTAPI_CLOUD_APP_ID fastapi deploy backend
+          ls -la
+          ls -la backend || true
+          # app was created with directory=backend, so deploy from repo root (no path arg)
+          fastapi deploy --app-id $FASTAPI_CLOUD_APP_ID || \
+          fastapi cloud deploy --app-id $FASTAPI_CLOUD_APP_ID
           for i in 1 2 3 4 5 6; do curl -sf ${{ secrets.PROD_API_URL }}/healthz && break || sleep 10; done
           curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
       - name: Smoke prod
