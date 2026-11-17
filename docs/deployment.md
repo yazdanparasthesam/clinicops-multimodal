@@ -1,6 +1,6 @@
 # Deployment & CI/CD
 
-## Targets (same as financial-statement but prod dispatched)
+## Targets 
 
 - **Dev API:** FastAPI Cloud `clinicops-dev-api` → `https://clinicops-dev-api.fastapicloud.dev`
 - **Dev Web:** Vercel `clinicops-dev-web` → `https://clinicops-dev-web.vercel.app`
