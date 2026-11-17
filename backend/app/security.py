@@ -5,7 +5,7 @@ from .config import settings
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(p: str) -> str:
-    # bcrypt 72-byte limit — truncate safely (same as financial-statement workaround)
+    # bcrypt 72-byte limit — truncate safely 
     return pwd_context.hash(p[:72])
 
 def verify_password(p: str, h: str) -> bool:
