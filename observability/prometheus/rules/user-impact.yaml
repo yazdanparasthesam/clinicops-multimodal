@@ -5,19 +5,19 @@ groups:
     interval: 10s
     rules:
       - alert: BackendDown
-        expr: up{job="financial-statement-backend"} == 0
+        expr: up{job="clinicops-multimodal-backend"} == 0
         for: 30s
         labels:
           severity: critical
         annotations:
           summary: "Backend unreachable — the whole app is down for users"
-          description: "Prometheus could not scrape financial-statement-backend for 30s."
+          description: "Prometheus could not scrape clinicops-multimodal-backend for 30s."
           impact: "Upload, generate, validate, review and export all fail."
           runbook: "ops/runbooks/backend-down.md — the on-call agent applies it automatically."
 
       - alert: SubmitFlowErrors
         expr: >
-          sum(rate(http_requests_total{job="financial-statement-backend",
+          sum(rate(http_requests_total{job="clinicops-multimodal-backend",
             handler=~"/api/filings/.*/(submit|review/transition)", status="5xx"}[5m])) > 0
         for: 1m
         labels:
@@ -32,7 +32,7 @@ groups:
         expr: >
           histogram_quantile(0.95,
             sum by (le) (rate(http_request_duration_seconds_bucket{
-              job="financial-statement-backend"}[5m]))) > 2
+              job="clinicops-multimodal-backend"}[5m]))) > 2
         for: 5m
         labels:
           severity: warning
