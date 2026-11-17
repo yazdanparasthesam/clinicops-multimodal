@@ -4,7 +4,7 @@
 
 ## Observed
 
-- The user is signed into Neon Console and confirmed the existing `financial-statement` project, its default `production` branch, and a provisioned Postgres database.
+- The user is signed into Neon Console and confirmed the existing `clinicops-multimodal` project, its default `production` branch, and a provisioned Postgres database.
 - The first `npx --yes neon@latest login` attempt failed during package resolution with `ENOTFOUND` for the configured registry; no Neon auth flow began.
 - Retrying with the official npm registry started browser authorization. The user completed it; terminal output confirmed `Auth complete (profile DEFAULT)`.
 - The browser Console session is separate from Neon CLI authentication.
@@ -19,7 +19,7 @@
 
 ## Next safe action
 
-The user ran the requested `neon init` command from the local project root. It linked `financial-statement` / `production`, generated `neon.ts`, installed dependencies, and pulled three variable names (`DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_BRANCH`) into local `.env`. The screenshot shows no values, and no local env file is present in the workspace. The CLI output recommends reviewing `neon config plan` before `neon deploy`; do that next. The CLI also installed a user-level Neon plugin for several agents and configured MCP for OpenCode. Do not record any API-key value from the local agent config.
+The user ran the requested `neon init` command from the local project root. It linked `clinicops-multimodal` / `production`, generated `neon.ts`, installed dependencies, and pulled three variable names (`DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_BRANCH`) into local `.env`. The screenshot shows no values, and no local env file is present in the workspace. The CLI output recommends reviewing `neon config plan` before `neon deploy`; do that next. The CLI also installed a user-level Neon plugin for several agents and configured MCP for OpenCode. Do not record any API-key value from the local agent config.
 
 ## App integration finding
 
