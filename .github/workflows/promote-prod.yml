@@ -22,16 +22,18 @@ jobs:
         run: |
           pip install --user "fastapi[standard]"
           export PATH=$HOME/.local/bin:$PATH
-          ls -la
-          ls -la backend || true
-          # app was created with directory=backend, so deploy from repo root (no path arg)
-          fastapi deploy --app-id $FASTAPI_CLOUD_APP_ID || \
-          fastapi cloud deploy --app-id $FASTAPI_CLOUD_APP_ID
+          fastapi deploy --app-id $FASTAPI_CLOUD_APP_ID || fastapi cloud deploy --app-id $FASTAPI_CLOUD_APP_ID
           for i in 1 2 3 4 5 6; do curl -sf ${{ secrets.PROD_API_URL }}/healthz && break || sleep 10; done
           curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
       - name: Smoke prod
         run: BASE=${{ secrets.PROD_API_URL }} bash ops/smoke.sh ${{ secrets.PROD_API_URL }}
       - name: Deploy Web prod
-        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_PROD_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_PROD_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROD_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PROD_TOKEN }}
+        run: |
+          npx vercel pull --yes --environment=production --token=$VERCEL_TOKEN || true
+          npx vercel deploy --prod --token=$VERCEL_TOKEN --yes
       - name: Verify prod
         run: curl -sf ${{ secrets.PROD_WEB_URL }}/ | grep -q "<title>" && curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
