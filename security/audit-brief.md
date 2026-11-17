@@ -1,6 +1,6 @@
 # Security & Audit Brief
 
-Scope: the Financial Statement repository, its CI pipeline, its runtime AI usage, and its deployment.
+Scope: the ClinicOps Multimodal repository, its CI pipeline, its runtime AI usage, and its deployment.
 This brief defines *what we scan, how, and how findings are triaged*. Raw outputs live in
 `security/runs/<date>-<tool>/` (committed artifacts — criterion 13).
 
@@ -42,7 +42,7 @@ trivy fs .. --format json -o ../security/runs/$(date +%F)-trivy/trivy.json
 |---|---|---|---|---|
 | 2026-10-13 | design review | HIGH | JWT default secret `dev-secret-change-me` could ship to prod | **mitigated**: docs/deployment.md mandates generated secret; compose warns; prod checklist item; Render env is secret-marked |
 | 2026-10-13 | design review | MED | CORS `*` acceptable in dev only | **mitigated**: deployment.md requires explicit `CORS_ORIGINS` in prod |
-| 2026-10-13 | design review | MED | Uploaded XLSX parsed in-process (zip-bomb class) | **mitigated**: openpyxl read-only mode; 10 MB nginx `client_max_body_size`; documented |
+| 2026-10-13 | design review | MED | Uploaded attachments (images/audio/documents) parsed in-process (zip-bomb / media-bomb class) | **mitigated**: read-only parsers; 10 MB nginx `client_max_body_size`; mime-type allowlist; documented |
 | — | — | — | *(M9 full scan outputs append here)* | — |
 
 ## Adjacent policies
