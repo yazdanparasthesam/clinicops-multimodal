@@ -227,7 +227,6 @@ Screenshots in `evidence/curated/` (15 files, indexed in `evidence/README.md`).
 <a id="ai-agents"></a>
 ## 🤖 AI Agents & Development Workflow
 
-Same team as financial-statement — roster unchanged:
 
 | Agent | Role |
 |---|---|
@@ -332,7 +331,6 @@ make openapi          # regenerate openapi.yaml (commit if changed)
 <a id="makefile-commands"></a>
 ## 🛠️ Makefile Commands
 
-Same as financial-statement — not a word removed, just app name updated:
 
 | Command | What it does |
 |---|---|
@@ -400,7 +398,7 @@ clinicops-multimodal/  # yaza/yazdanparasthesam/clinicops-multimodal — main=eb
 ├── docs/
 │   ├── architecture.md + agent-team.md + ai-workflow.md + deployment.md + observability.md + testing.md
 │   ├── course-submission-runbook.md  # 8 steps + Neon→FastAPI Cloud method + Vercel Other/root frontend/dist
-│   └── images/                  # clinicops-architecture.svg (16K) + clinicops-banner.png + financial-statement-*
+│   └── images/                  # clinicops-architecture.svg (16K) + clinicops-banner.png
 ├── evidence/                    # 137 frames — 00…13 local + 44-49 Vercel settings + 94-113 CI/Neon/FastAPI/Vercel/Smoke (113=19/19 live)
 ├── security/ + security-audit/  # telemetry-policy, ai-data-policy, credentials
 ├── seed/ + neon.ts + package.json  # Neon Postgres integration (dev/production branches, pooled)
