@@ -456,45 +456,6 @@ The latest confirmed dev sequence is green: commit `ab26a95`, CI #32, API Deploy
 
 ![In-progress Export checklist: notes finalization, review submission, and reviewer acceptance remain unchecked; not completion evidence](images/dev-export-checklist-pending.png)
 
-![Vercel project metadata names clinicops-dev-web; project identifiers and shell identity are cropped out](../evidence/52-vercel-project-metadata-redacted.png)
-
-![Vercel token-creation settings show project scope clinicops-dev-web and a 30-day expiry; no token value is shown](../evidence/53-vercel-project-scoped-token-settings.png)
-
-![Before Vercel credential setup, the GitHub Actions secret list contains only the two existing FastAPI Cloud secret names](../evidence/54-github-vercel-secrets-before-addition.png)
-
-![GitHub Actions repository now includes Vercel deployment secret names; values are not shown](../evidence/55-github-vercel-deploy-secrets-configured.png)
-
-![GitHub Actions shows green CI #9, API Deploy #9, and Vercel Web #2 runs](../evidence/56-github-vercel-dev-deploy-green.png)
-
-![Latest GitHub Actions shows green CI #10, API Deploy #10, and Vercel Web #3](../evidence/57-github-latest-dev-deploy-green.png)
-
-![Vercel project overview shows the dev Production deployment Ready and the public domain assigned](../evidence/58-vercel-dev-project-production-ready.png)
-
-![Vercel deployment details show the latest dev deployment Ready and Current](../evidence/59-vercel-dev-deployment-details-ready.png)
-
-![Vercel preview deployment serves the ClinicOps sign-in screen](../evidence/60-vercel-preview-login-page.png)
-
-![Stable clinicops-dev-web.vercel.app/login serves the ClinicOps sign-in screen](../evidence/61-dev-web-login-page.png)
-
-![Registration screen with all entered identity and password values removed](../evidence/62-dev-web-registration-form-redacted.png)
-
-![First authenticated Dashboard after registration; account email cropped out](../evidence/63-dev-web-empty-dashboard.png)
-
-![Patient setup form with the National ID blanked in the evidence copy](../evidence/64-dev-web-patient-created-redacted.png)
-
-![Dashboard shows synthetic patient and visit #9 in Draft](../evidence/65-dev-web-visit-created.png)
-
-![Visit #9 opens to the Intake upload step](../evidence/66-dev-web-intake-step.png)
-
-![Uploaded multimodal intake: CSV + wound image + voice memo with modalities linked](../evidence/67-dev-web-intake-uploaded.png)
-
-![Generated clinical scores (BMI, eGFR, MAP, Wells, CCI…) from the uploaded data](../evidence/68-dev-web-scores-generated.png)
-
-![Validation reports 8 of 8 rules passed and ready to submit](../evidence/69-dev-web-validation-passed.png)
-
-![AI draft: vision findings + transcript → SOAP structured note (self-criticism)](../evidence/70-dev-web-ai-drafts-generated.png)
-
-![Review page shows AI discharge summary; visit is still Draft and not yet submitted](../evidence/71-dev-web-review-draft.png)
 
 The exact dev CORS origin was saved and applied by the gated API deployment. Production API/Vercel settings, CORS, environment secrets, and approval protection are configured; the apps remain undeployed until prod dispatch and API-to-Neon connectivity is unverified. Commit `ab26a95` has green CI #32, dev API Deploy #32, and dev Vercel Web #25. Deploy #32 shows `deploy-dev` succeeded and `deploy-prod` succeeded via manual promotion (evidence 93) — **the fix vs Project 1 where prod was skipped**. The Vercel token rotation and API-first workflow-order review are deferred until final preflight. The dev visit is still Draft; only use synthetic data.
 
