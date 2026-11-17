@@ -22,8 +22,15 @@ jobs:
           pip install --user "fastapi[standard]"
           export PATH=$HOME/.local/bin:$PATH
           fastapi --help
-          fastapi deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} --token $FASTAPI_CLOUD_TOKEN || \
-          fastapi cloud deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} --token $FASTAPI_CLOUD_TOKEN
+          fastapi deploy --help
+          fastapi cloud deploy --help || true
+          # auth via env token (no --token on deploy)
+          echo "$FASTAPI_CLOUD_TOKEN" | fastapi login --token-stdin 2>&1 || echo "$FASTAPI_CLOUD_TOKEN" | fastapi cloud login --token-stdin 2>&1 || true
+          # deploy - try with app-id, fallback without
+          fastapi deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} || \
+          fastapi cloud deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} || \
+          fastapi deploy || \
+          fastapi cloud deploy
           for i in 1 2 3 4 5 6; do curl -sf ${{ secrets.PROD_API_URL }}/healthz && break || sleep 10; done
           curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
       - name: Smoke prod
