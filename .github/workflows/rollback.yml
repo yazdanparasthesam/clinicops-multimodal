@@ -1,1 +1,25 @@
-# Alias for ClinicOps — see rollback.yml in ClinicOps (promote-prod.yml)
+name: Rollback (alias)
+
+# Alias kept for tree-parity with financial-statement.
+# Real rollback: vercel rollback / redeploy previous deployment, or promote-prod.yml guard.
+# No-op so GitHub Actions validation passes.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Rollback target (dev/prod)'
+        required: false
+        default: 'dev'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rollback.yml']
+
+jobs:
+  alias-noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Alias info
+        run: |
+          echo "Alias for ClinicOps — rollback handled via Vercel dashboard or promote-prod.yml."
+          echo "Target: ${{ inputs.target || 'dev' }} — no action, see docs/deployment.md."

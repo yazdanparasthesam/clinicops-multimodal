@@ -1,1 +1,20 @@
-# Alias for ClinicOps — see deploy-vercel.yml in ClinicOps (promote-prod.yml)
+name: Deploy Vercel (alias)
+
+# Alias kept for tree-parity with financial-statement.
+# Real deploys: .github/workflows/deploy.yml (dev auto) + promote-prod.yml (prod manual).
+# This file is intentionally a no-op so GitHub Actions validation passes.
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: ['.github/workflows/deploy-vercel.yml']
+
+jobs:
+  alias-noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Alias info
+        run: |
+          echo "Alias for ClinicOps — see deploy.yml (Deploy Dev auto) and promote-prod.yml (Promote to Prod manual)."
+          echo "No deployment performed by this alias workflow."
