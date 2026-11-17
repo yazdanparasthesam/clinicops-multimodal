@@ -3,49 +3,45 @@ import { useState, type ReactNode } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../api/client'
 import ErrorNote from '../../components/ErrorNote'
-import { fmtAmount } from '../../lib/format'
-import { categoryLabel } from '../../lib/categories'
-import type { CashFlowData, FilingStatus, Ratio, Statement } from '../../api/types'
+import { fmtScore } from '../../lib/format'
+import { scoreLabel } from '../../lib/categories'
+import type { VisitStatus, ClinicalScore, AssessmentData, VitalsData } from '../../api/types'
 
-const PL_ORDER: { key: string; subtotal?: string }[] = [
-  { key: 'revenue' }, { key: 'cogs' }, { key: 'gross_profit', subtotal: 'Gross profit' },
-  { key: 'operating_expenses' }, { key: 'operating_profit', subtotal: 'Operating profit' },
-  { key: 'other_income' }, { key: 'other_expenses' },
-  { key: 'profit_before_tax', subtotal: 'Profit before tax' },
-  { key: 'tax_expense' }, { key: 'net_profit', subtotal: 'NET PROFIT' },
+const VITALS_ORDER: { key: string; subtotal?: string }[] = [
+  { key: 'blood_pressure' }, { key: 'heart_rate' }, { key: 'temperature' },
+  { key: 'respiratory_rate' }, { key: 'oxygen_saturation', subtotal: 'VITALS SUMMARY' },
 ]
-const BS_ORDER: { key: string; subtotal?: string }[] = [
-  { key: 'current_assets' }, { key: 'non_current_assets' }, { key: 'total_assets', subtotal: 'TOTAL ASSETS' },
-  { key: 'current_liabilities' }, { key: 'non_current_liabilities' }, { key: 'total_liabilities', subtotal: 'Total liabilities' },
-  { key: 'equity' }, { key: 'current_year_profit', subtotal: 'Current-year profit (from P&L)' },
-  { key: 'total_equity', subtotal: 'Total equity' },
-  { key: 'total_liabilities_and_equity', subtotal: 'TOTAL LIABILITIES & EQUITY' },
+const ASSESSMENT_ORDER: { key: string; subtotal?: string }[] = [
+  { key: 'chief_complaint' }, { key: 'history' }, { key: 'examination' },
+  { key: 'labs' }, { key: 'imaging', subtotal: 'ASSESSMENT SUMMARY' },
 ]
 
-function StatementView({ stmt, order }: { stmt: Statement; order: typeof PL_ORDER }) {
+function AssessmentView({ data, order }: { data: AssessmentData; order: typeof VITALS_ORDER }) {
   return (
     <table className="w-full">
       <tbody>
         {order.map(({ key, subtotal }) => {
-          const node = stmt.data[key]
+          const node = data[key]
           if (node && typeof node === 'object' && 'items' in node) {
-            const section = node as { items: { code: string; name: string; amount: number }[]; total: number }
+            const section = node as { items: { code: string; name: string; value: number; unit?: string }[]; total?: number }
             return (
-              <FragmentRow key={key} label={categoryLabel(key)}>
+              <FragmentRow key={key} label={scoreLabel(key)}>
                 {section.items.map((it) => (
                   <tr key={it.code}><td className="td pl-8 text-slate-500">{it.code} · {it.name}</td>
-                    <td className="td text-right text-slate-500">{fmtAmount(it.amount)}</td></tr>
+                    <td className="td text-right text-slate-500">{fmtScore(it.value, it.unit)}</td></tr>
                 ))}
-                <tr><td className="td font-semibold">Total {categoryLabel(key)}</td>
-                  <td className="td text-right font-semibold">{fmtAmount(section.total)}</td></tr>
+                {section.total !== undefined && (
+                  <tr><td className="td font-semibold">Total {scoreLabel(key)}</td>
+                    <td className="td text-right font-semibold">{fmtScore(section.total)}</td></tr>
+                )}
               </FragmentRow>
             )
           }
           if (typeof node === 'number') {
             return (
-              <tr key={key} className={subtotal?.startsWith('TOTAL') || subtotal === 'NET PROFIT' ? 'bg-brand-50' : ''}>
-                <td className={`td ${subtotal ? 'font-semibold' : ''}`}>{subtotal ?? categoryLabel(key)}</td>
-                <td className={`td text-right ${subtotal ? 'font-semibold' : ''}`}>{fmtAmount(node)}</td>
+              <tr key={key} className={subtotal?.startsWith('TOTAL') || subtotal === 'VITALS SUMMARY' ? 'bg-brand-50' : ''}>
+                <td className={`td ${subtotal ? 'font-semibold' : ''}`}>{subtotal ?? scoreLabel(key)}</td>
+                <td className={`td text-right ${subtotal ? 'font-semibold' : ''}`}>{fmtScore(node)}</td>
               </tr>
             )
           }
@@ -65,57 +61,41 @@ function FragmentRow({ label, children }: { label: string; children: ReactNode }
   )
 }
 
-const CF_LABELS: Record<string, string> = {
-  net_profit: 'Net profit (from P&L)',
-  depreciation_addback: 'Depreciation add-back',
-  delta_receivables: 'Δ Receivables (rise uses cash)',
-  delta_inventory: 'Δ Inventory (rise uses cash)',
-  delta_payables: 'Δ Payables (rise frees cash)',
-  equipment_purchases: 'Equipment purchases',
-  delta_loans: 'Δ Non-current loans',
-  delta_capital: 'Δ Share capital',
+const SCORE_LABELS: Record<string, string> = {
+  triage_score: 'Triage score',
+  early_warning: 'Early Warning Score',
+  pain_scale: 'Pain scale',
+  risk_index: 'Clinical risk index',
 }
 
-/** Cash-flow statement (indirect method) — pure arithmetic, generated server-side. */
-function CashFlowView({ cf }: { cf: CashFlowData }) {
-  const line = (label: string, value: number, strong = false) => (
+/** Vitals timeline — deterministic, captured from intake attachments + manual entry. */
+function VitalsView({ vitals }: { vitals: VitalsData }) {
+  const line = (label: string, value: number | string, strong = false) => (
     <tr key={label}>
       <td className={`td ${strong ? 'font-semibold' : ''}`}>{label}</td>
-      <td className={`td text-right ${strong ? 'font-semibold' : ''}`}>{fmtAmount(value)}</td>
+      <td className={`td text-right ${strong ? 'font-semibold' : ''}`}>{typeof value === 'number' ? fmtScore(value) : value}</td>
     </tr>
   )
-  const reconciled = Math.abs(cf.reconciliation_gap) <= 1.0
+  const stable = vitals.flags?.length === 0
   return (
     <table className="w-full">
       <tbody>
-        <FragmentRow label="Operating activities (indirect)">
-          {line(CF_LABELS.net_profit, cf.operating.net_profit)}
-          {line(CF_LABELS.depreciation_addback, cf.operating.depreciation_addback)}
-          {line(CF_LABELS.delta_receivables, cf.operating.delta_receivables)}
-          {line(CF_LABELS.delta_inventory, cf.operating.delta_inventory)}
-          {line(CF_LABELS.delta_payables, cf.operating.delta_payables)}
-          {line('Net cash from operating activities', cf.operating.total, true)}
+        <FragmentRow label="Vitals (latest intake)">
+          {line('Blood pressure', vitals.blood_pressure ?? '—')}
+          {line('Heart rate', vitals.heart_rate ?? '—')}
+          {line('Temperature', vitals.temperature ?? '—')}
+          {line('Respiratory rate', vitals.respiratory_rate ?? '—')}
+          {line('SpO₂', vitals.oxygen_saturation ?? '—', true)}
         </FragmentRow>
-        <FragmentRow label="Investing activities">
-          {line(CF_LABELS.equipment_purchases, cf.investing.equipment_purchases)}
-          {line('Net cash from investing activities', cf.investing.total, true)}
+        <FragmentRow label="Derived indicators">
+          {line(SCORE_LABELS.early_warning, vitals.early_warning_score ?? '—')}
+          {line(SCORE_LABELS.triage_score, vitals.triage_score ?? '—', true)}
         </FragmentRow>
-        <FragmentRow label="Financing activities">
-          {line(CF_LABELS.delta_loans, cf.financing.delta_loans)}
-          {line(CF_LABELS.delta_capital, cf.financing.delta_capital)}
-          {line('Net cash from financing activities', cf.financing.total, true)}
-        </FragmentRow>
-        <tr className="bg-brand-50">
-          <td className="td font-semibold">NET CHANGE IN CASH</td>
-          <td className="td text-right font-semibold">{fmtAmount(cf.net_change_in_cash)}</td>
-        </tr>
-        {line(`Cash at beginning of year`, cf.cash_begin)}
-        {line(`Cash at end of year`, cf.cash_end)}
         <tr>
-          <td className="td">Reconciliation gap (rule R007)</td>
+          <td className="td">Validation flags (R001–R008)</td>
           <td className="td text-right">
-            <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${reconciled ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-              {fmtAmount(cf.reconciliation_gap)} {reconciled ? '· reconciled ✓' : '· check R007'}
+            <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${stable ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+              {stable ? 'no flags ✓' : `${vitals.flags.length} flag(s) · review`}
             </span>
           </td>
         </tr>
@@ -124,26 +104,26 @@ function CashFlowView({ cf }: { cf: CashFlowData }) {
   )
 }
 
-function fmtRatio(r: Ratio): string {
+function fmtClinicalScore(r: ClinicalScore): string {
   if (r.value === null) return '—'
-  return r.unit === '%' ? `${r.value}%` : `${r.value}${r.unit === 'x' ? '×' : ''}`
+  return r.unit === '%' ? `${r.value}%` : `${r.value}${r.unit === 'x' ? '×' : r.unit ? ` ${r.unit}` : ''}`
 }
 
-/** Deterministic ratios — each row shows its formula so the math is auditable. */
-function RatiosPanel({ ratios }: { ratios: Ratio[] }) {
+/** Deterministic clinical scores — each row shows its formula so the math is auditable. */
+function ScoresPanel({ scores }: { scores: ClinicalScore[] }) {
   return (
     <table className="w-full">
       <thead>
         <tr className="text-left text-xs uppercase tracking-wide text-slate-400">
-          <th className="td">Ratio</th><th className="td text-right">Value</th>
+          <th className="td">Score</th><th className="td text-right">Value</th>
           <th className="td">Formula</th><th className="td">Interpretation</th>
         </tr>
       </thead>
       <tbody>
-        {ratios.map((r) => (
+        {scores.map((r) => (
           <tr key={r.key}>
             <td className="td font-medium text-slate-700">{r.label}</td>
-            <td className="td text-right font-semibold tabular-nums">{fmtRatio(r)}</td>
+            <td className="td text-right font-semibold tabular-nums">{fmtClinicalScore(r)}</td>
             <td className="td font-mono text-xs text-slate-500">{r.formula}</td>
             <td className="td text-xs text-slate-500">{r.interpretation}</td>
           </tr>
@@ -153,19 +133,21 @@ function RatiosPanel({ ratios }: { ratios: Ratio[] }) {
   )
 }
 
-export default function StatementsTab({ filingId, status }: { filingId: number; status: FilingStatus }) {
+export default function ScoresTab({ visitId, status }: { visitId: number; status: VisitStatus }) {
   const qc = useQueryClient()
   const [error, setError] = useState<unknown>(null)
   const noRetry404 = { retry: (_c: number, e: unknown) => (e as { status?: number })?.status !== 404 }
-  const pl = useQuery({ queryKey: ['stmt', filingId, 'pl'], queryFn: () => api.statements.get(filingId, 'pl'), ...noRetry404 })
-  const bs = useQuery({ queryKey: ['stmt', filingId, 'bs'], queryFn: () => api.statements.get(filingId, 'bs'), ...noRetry404 })
-  const cf = useQuery({ queryKey: ['stmt', filingId, 'cf'], queryFn: () => api.statements.get(filingId, 'cf'), ...noRetry404 })
-  const ratios = useQuery({ queryKey: ['ratios', filingId], queryFn: () => api.statements.ratios(filingId), ...noRetry404 })
+  const vitalsQ = useQuery({ queryKey: ['vitals', visitId], queryFn: () => api.visits.getVitals(visitId), ...noRetry404 })
+  const assessmentQ = useQuery({ queryKey: ['assessment', visitId], queryFn: () => api.visits.getAssessment(visitId), ...noRetry404 })
+  const scoresQ = useQuery({ queryKey: ['scores', visitId], queryFn: () => api.visits.getScores(visitId), ...noRetry404 })
+  const vitalsTimelineQ = useQuery({ queryKey: ['vitals-timeline', visitId], queryFn: () => api.visits.getVitalsTimeline(visitId), ...noRetry404 })
   const generate = useMutation({
-    mutationFn: () => api.statements.generate(filingId),
+    mutationFn: () => api.visits.generateScores(visitId),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['stmt', filingId] })
-      qc.invalidateQueries({ queryKey: ['ratios', filingId] })
+      qc.invalidateQueries({ queryKey: ['vitals', visitId] })
+      qc.invalidateQueries({ queryKey: ['assessment', visitId] })
+      qc.invalidateQueries({ queryKey: ['scores', visitId] })
+      qc.invalidateQueries({ queryKey: ['vitals-timeline', visitId] })
     },
     onError: setError,
   })
@@ -175,33 +157,33 @@ export default function StatementsTab({ filingId, status }: { filingId: number; 
     <div className="space-y-4">
       <ErrorNote error={error} />
       <div className="card flex items-center justify-between">
-        <p className="text-sm text-slate-500">Deterministic generation from the mapped trial balance — the AI never computes these figures.</p>
+        <p className="text-sm text-slate-500">Deterministic generation from mapped intake — the AI never computes these figures.</p>
         <button className="btn-primary" disabled={generate.isPending || !editable} onClick={() => { setError(null); generate.mutate() }}>
-          {generate.isPending ? 'Generating…' : 'Generate statements'}
+          {generate.isPending ? 'Generating…' : 'Generate scores'}
         </button>
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="card">
-          <h3 className="mb-2 font-semibold text-slate-700">Profit & Loss {pl.data && <span className="text-xs text-slate-400">v{pl.data.version}</span>}</h3>
-          {pl.data ? <StatementView stmt={pl.data} order={PL_ORDER} /> : <p className="text-sm text-slate-400">Not generated yet.</p>}
+          <h3 className="mb-2 font-semibold text-slate-700">Vitals {vitalsQ.data && <span className="text-xs text-slate-400">v{vitalsQ.data.version}</span>}</h3>
+          {vitalsQ.data ? <AssessmentView data={vitalsQ.data} order={VITALS_ORDER} /> : <p className="text-sm text-slate-400">Not generated yet.</p>}
         </div>
         <div className="card">
-          <h3 className="mb-2 font-semibold text-slate-700">Balance Sheet {bs.data && <span className="text-xs text-slate-400">v{bs.data.version}</span>}</h3>
-          {bs.data ? <StatementView stmt={bs.data} order={BS_ORDER} /> : <p className="text-sm text-slate-400">Not generated yet.</p>}
+          <h3 className="mb-2 font-semibold text-slate-700">Assessment {assessmentQ.data && <span className="text-xs text-slate-400">v{assessmentQ.data.version}</span>}</h3>
+          {assessmentQ.data ? <AssessmentView data={assessmentQ.data} order={ASSESSMENT_ORDER} /> : <p className="text-sm text-slate-400">Not generated yet.</p>}
         </div>
         <div className="card">
           <h3 className="mb-2 font-semibold text-slate-700">
-            Cash Flow (indirect) {cf.data && <span className="text-xs text-slate-400">v{cf.data.version}</span>}
+            Vitals timeline {vitalsTimelineQ.data && <span className="text-xs text-slate-400">v{vitalsTimelineQ.data.version}</span>}
           </h3>
-          {cf.data
-            ? <CashFlowView cf={cf.data.data as unknown as CashFlowData} />
-            : <p className="text-sm text-slate-400">Needs a prior-year balance sheet — generate both years.</p>}
+          {vitalsTimelineQ.data
+            ? <VitalsView vitals={vitalsTimelineQ.data.data as unknown as VitalsData} />
+            : <p className="text-sm text-slate-400">Needs intake attachments — upload vitals or visit notes first.</p>}
         </div>
         <div className="card">
-          <h3 className="mb-2 font-semibold text-slate-700">Financial ratios</h3>
-          {ratios.data && ratios.data.length > 0
-            ? <RatiosPanel ratios={ratios.data} />
-            : <p className="text-sm text-slate-400">Generated with the statements — every ratio shows its formula.</p>}
+          <h3 className="mb-2 font-semibold text-slate-700">Clinical scores</h3>
+          {scoresQ.data && scoresQ.data.length > 0
+            ? <ScoresPanel scores={scoresQ.data} />
+            : <p className="text-sm text-slate-400">Generated with the assessment — every score shows its formula.</p>}
         </div>
       </div>
     </div>
