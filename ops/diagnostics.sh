@@ -5,7 +5,7 @@
 set -uo pipefail
 BASE="${1:-http://localhost:8000}"
 FRONT="${2:-}"
-echo "== Financial Statement diagnostics $(date -u +%FT%TZ) =="
+echo "== clinicops-multimodal diagnostics $(date -u +%FT%TZ) =="
 echo "target: $BASE"
 
 probe() { # probe <label> <url>
