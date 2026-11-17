@@ -23,8 +23,8 @@ export default function LoginPage() {
     <div className="grid min-h-screen place-items-center p-6">
       <form onSubmit={onSubmit} className="card w-full max-w-sm space-y-4">
         <div>
-          <h1 className="text-xl font-semibold text-slate-800">Sign in to Financial Statement</h1>
-          <p className="text-sm text-slate-500">Financial statements & tax filing workspace</p>
+          <h1 className="text-xl font-semibold text-slate-800">Sign in to ClinicOps Multimodal</h1>
+          <p className="text-sm text-slate-500">Multimodal intake & clinical workflow</p>
         </div>
         <ErrorNote error={error} />
         <div><label className="label">Email</label>
