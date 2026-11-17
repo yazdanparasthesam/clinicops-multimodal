@@ -44,7 +44,7 @@ This project is built and operated by a **team of agents** around one human owne
 
 ## Auto-close behavior
 
-Commits that contain `Closes #N` (e.g. `feat: scores engine (Closes #2)`) are auto-closed by `.github/workflows/auto-close-issues.yml` via `actions/github-script`. This mirrors the manual `gh issue close N` workflow from financial-statement but is auditable in CI logs. Agent commits should always reference the tracker issue number.
+Commits that contain `Closes #N` (e.g. `feat: scores engine (Closes #2)`) are auto-closed by `.github/workflows/auto-close-issues.yml` via `actions/github-script`. This mirrors the manual `gh issue close N` workflow  but is auditable in CI logs. Agent commits should always reference the tracker issue number.
 
 ## Evidence the team was actually used
 
