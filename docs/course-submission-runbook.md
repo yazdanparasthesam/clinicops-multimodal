@@ -474,17 +474,7 @@ Production Vercel project `clinicops-prod-web` is configured **and deployed**. C
 
 ![Vercel production domain clinicops-prod-web.vercel.app is Live](../evidence/82-vercel-clinicops-prod-web-domain.png)
 
-![FastAPI Cloud production CORS origin is set; app is Live](../evidence/83-fastapi-cloud-prod-cors-origin.png)
 
-![GitHub production environment contains VERCEL_PROD_TOKEN; token value is not shown](../evidence/84-github-production-vercel-token-secret.png)
-
-![GitHub production environment now contains both Vercel org and project ID secrets](../evidence/90-github-prod-vercel-ids-added.png)
-
-![GitHub Actions confirms the ab26a95 CI/dev API/dev web chain is green](../evidence/91-github-dev-chain-ab26a95-green.png)
-
-![Deploy #32 shows deploy-dev succeeded and deploy-prod succeeded via manual promotion](../evidence/93-deploy32-production-job-succeeded.png)
-
-![Vercel project token is scoped to clinicops-prod-web](../evidence/85-vercel-token-project-scope-expiry.png)
 
 FastAPI Cloud `clinicops-prod-api` has been created and now shows `DATABASE_URL` and `JWT_SECRET` as masked environment secrets. The app is **Live**. Its Settings page confirms root `backend` and repository **Not Connected**. The secret screenshot confirms variable names are saved — and the live `/healthz` plus smoke confirm the database connection works. Do not use its dashboard deployment control; the GitHub production workflow is the intended gate. Commit `ab26a95` is pushed to `main`; CI #32, automatic dev API Deploy #32, and Vercel Web #25 are green. The production job was **manually dispatched** via `promote-prod.yml` with approval; this run constitutes production deployment evidence (fixing Project 1 gap).
 
