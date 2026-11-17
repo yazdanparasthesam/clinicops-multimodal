@@ -1,6 +1,6 @@
 # Runbook: BackendDown
 
-**Alert:** `up{job="financial-statement-backend"} == 0` for 30s (critical)
+**Alert:** `up{job="clinicops-multimodal-backend"} == 0` for 30s (critical)
 **User impact:** every journey is broken — upload, generate, validate, review, export.
 
 ## Automated response (on-call agent)
