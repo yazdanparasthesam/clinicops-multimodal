@@ -16,14 +16,19 @@ jobs:
       - name: Guard
         run: test "${{ github.event.inputs.confirm }}" = "PROMOTE"
       - name: Deploy API prod
+        env:
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_PROD_TOKEN }}
         run: |
-          echo "Deploying clinicops-prod-api"
-          curl -sf ${{ secrets.PROD_API_URL }}/healthz || echo "create prod API app"
-          # TODO: fastapi-cloud deploy --app clinicops-prod-api --env production
+          pip install --user "fastapi[standard]"
+          export PATH=$HOME/.local/bin:$PATH
+          fastapi --help
+          fastapi deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} --token $FASTAPI_CLOUD_TOKEN || \
+          fastapi cloud deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} --token $FASTAPI_CLOUD_TOKEN
+          for i in 1 2 3 4 5 6; do curl -sf ${{ secrets.PROD_API_URL }}/healthz && break || sleep 10; done
+          curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
       - name: Smoke prod
         run: BASE=${{ secrets.PROD_API_URL }} bash ops/smoke.sh ${{ secrets.PROD_API_URL }}
       - name: Deploy Web prod
-        run: |
-          npx vercel deploy --prod --token=${{ secrets.VERCEL_PROD_TOKEN }} --yes
+        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_PROD_TOKEN }} --yes
       - name: Verify prod
         run: curl -sf ${{ secrets.PROD_WEB_URL }}/ | grep -q "<title>" && curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
