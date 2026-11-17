@@ -1,7 +1,7 @@
 # Troubleshooting episode 001 — Docker Buildx permission denied
 
 **Date:** 2026-10-25  
-**Environment:** Linux, Docker Compose v2.27.0, project at `~/Documents/financial-statement`  
+**Environment:** Linux, Docker Compose v2.27.0, project at `~/Documents/clinicops-multimodal`  
 **Scope:** local app-only Docker Compose startup.  
 **Screenshots:** failure state intentionally not retained in `evidence/`; the successful retry is retained there.
 
@@ -36,7 +36,7 @@ That build completed and Compose reported **Running 5/5**, with Postgres and bac
 - `docker compose ps`: `db` healthy, `backend` healthy, `frontend` up.
 - `curl -fsS http://localhost:8000/healthz`: `{"status":"ok"}`.
 - `curl -I http://localhost:3000`: `HTTP/1.1 200 OK`.
-- Browser: `http://localhost:3000/login` displayed the Financial Statement sign-in page.
+- Browser: `http://localhost:3000/login` displayed the clinicops-multimodal sign-in page.
 
 Successful frames are embedded in `docs/course-submission-runbook.md` Step 2 and indexed in `evidence/README.md`.
 
