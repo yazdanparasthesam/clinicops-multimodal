@@ -8,6 +8,8 @@
 
 > 🌐 **Live Demo (dev):** [clinicops-multimodal.vercel.app](https://clinicops-multimodal.vercel.app)
 
+> 🌐 **Live Demo (prod):** [clinicops-prod-web.vercel.app](https://clinicops-prod-web.vercel.app/login)
+
 > 🎥 **Video Demo:** 
 
 <video src="https://github.com/user-attachments/assets/326985e1-c104-41ee-9622-e2d5520a4349" controls width="100%">
