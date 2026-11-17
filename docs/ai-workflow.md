@@ -24,7 +24,7 @@ human: goal + constraints → agent: plan → implement → self-review (lint/te
 
 ## Prompt log (representative)
 
-1. "Build ClinicOps multimodal clone of financial-statement structure with image+voice ingestion."
+1. "Build ClinicOps multimodal  structure with image+voice ingestion."
 2. "Rebuild AI layer on LangChain/LangGraph with vision self-criticism, Whisper transcribe, ReAct/ReWOO; keep mock deterministic."
 
 ## Runtime AI governance
