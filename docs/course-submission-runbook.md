@@ -215,7 +215,7 @@ It passed **28/28**, including scores/validations/workflow/HTTP metrics. Success
 
 ![Telemetry-enabled HTTP smoke: 28 passed, 0 failed](../evidence/04-observability-smoke.png)
 
-After the initial scrape baseline, the owner reran the smoke and waited 25 seconds. Prometheus then reported statement-counter increase `5.1085` and HTTP-request increase `26.5663`; the golden-journey dashboard populated request rate, p95 latency, journey-step timing, visits (5), failed validations (1), submits (1), approves (1), and AI calls. The 5xx panel has “No data,” expected because no 5xx responses occurred. The earlier zero-valued view is documented in `ops/troubleshooting/007-grafana-panels-zero.md` and is not retained as evidence.
+After the initial scrape baseline, the owner reran the smoke and waited 25 seconds. Prometheus then reported scores-counter (`clinicops_scores_generated`) increase `5.1085` and HTTP-request increase `26.5663`; the golden-journey dashboard populated request rate, p95 latency, journey-step timing, visits (5), failed validations (1), submits (1), approves (1), and AI calls. The 5xx panel has “No data,” expected because no 5xx responses occurred. The earlier zero-valued view is documented in `ops/troubleshooting/007-grafana-panels-zero.md` and is not retained as evidence.
 
 ![Golden-journey dashboard with request rate, latency, business counters](../evidence/04-grafana-golden-journey.png)
 
