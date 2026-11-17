@@ -4,7 +4,7 @@ def compute_deadline(created_at: datetime.datetime, hours: int = 72) -> datetime
     return created_at + datetime.timedelta(hours=hours)
 
 def add_months(dt: datetime.datetime, months: int) -> datetime.datetime:
-    # Month-end clamping like financial-statement
+    # Month-end clamping 
     import calendar
     year = dt.year + (dt.month -1 + months)//12
     month = (dt.month -1 + months) %12 +1
