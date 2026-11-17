@@ -1,6 +1,6 @@
 import { defineConfig } from "@neon/config/v1";
 
-// ClinicOps backend: Neon Postgres + branch policy unchanged from financial-statement (exact skeleton)
+// ClinicOps backend: Neon Postgres + branch policy unchanged from clinicops-multimodal (exact skeleton)
 export default defineConfig({
   // Declare your Neon services here
   auth: false,
