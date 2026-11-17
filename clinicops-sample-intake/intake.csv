@@ -1,0 +1,14 @@
+type,code,name,value,unit,notes
+vital,weight_kg,Weight,78,kg,synthetic demo
+vital,height_cm,Height,172,cm,synthetic demo
+vital,systolic,Systolic BP,118,mmHg,synthetic demo
+vital,diastolic,Diastolic BP,76,mmHg,synthetic demo
+vital,heart_rate,Heart Rate,72,bpm,synthetic demo
+vital,temperature,Temperature,36.8,C,synthetic demo
+lab,creatinine,Creatinine,0.9,mg/dL,synthetic demo
+lab,age,Age,45,years,synthetic demo
+lab,sex,Sex,male,,synthetic demo
+med,meds,Meds,"aspirin 80mg, omeprazole 20mg",,no known interaction
+allergy,allergies,Allergies,penicillin,,allergy documented
+consent,consent,Consent,yes,,patient consented for imaging
+dose,dose_mg,Dose,80,mg,aspirin daily
