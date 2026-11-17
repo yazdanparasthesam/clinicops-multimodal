@@ -456,6 +456,45 @@ The latest confirmed dev sequence is green: commit `ab26a95`, CI #32, API Deploy
 
 ![In-progress Export checklist: notes finalization, review submission, and reviewer acceptance remain unchecked; not completion evidence](images/dev-export-checklist-pending.png)
 
+![Vercel project metadata names clinicops-dev-web; project identifiers and shell identity are cropped out](../evidence/52-vercel-project-metadata-redacted.png)
+
+![Vercel token-creation settings show project scope clinicops-dev-web and a 30-day expiry; no token value is shown](../evidence/53-vercel-project-scoped-token-settings.png)
+
+![Before Vercel credential setup, the GitHub Actions secret list contains only the two existing FastAPI Cloud secret names](../evidence/54-github-vercel-secrets-before-addition.png)
+
+![GitHub Actions repository now includes Vercel deployment secret names; values are not shown](../evidence/55-github-vercel-deploy-secrets-configured.png)
+
+![GitHub Actions shows green CI #9, API Deploy #9, and Vercel Web #2 runs](../evidence/56-github-vercel-dev-deploy-green.png)
+
+![Latest GitHub Actions shows green CI #10, API Deploy #10, and Vercel Web #3](../evidence/57-github-latest-dev-deploy-green.png)
+
+![Vercel project overview shows the dev Production deployment Ready and the public domain assigned](../evidence/58-vercel-dev-project-production-ready.png)
+
+![Vercel deployment details show the latest dev deployment Ready and Current](../evidence/59-vercel-dev-deployment-details-ready.png)
+
+![Vercel preview deployment serves the ClinicOps sign-in screen](../evidence/60-vercel-preview-login-page.png)
+
+![Stable clinicops-dev-web.vercel.app/login serves the ClinicOps sign-in screen](../evidence/61-dev-web-login-page.png)
+
+![Registration screen with all entered identity and password values removed](../evidence/62-dev-web-registration-form-redacted.png)
+
+![First authenticated Dashboard after registration; account email cropped out](../evidence/63-dev-web-empty-dashboard.png)
+
+![Patient setup form with the National ID blanked in the evidence copy](../evidence/64-dev-web-patient-created-redacted.png)
+
+![Dashboard shows synthetic patient and visit #9 in Draft](../evidence/65-dev-web-visit-created.png)
+
+![Visit #9 opens to the Intake upload step](../evidence/66-dev-web-intake-step.png)
+
+![Uploaded multimodal intake: CSV + wound image + voice memo with modalities linked](../evidence/67-dev-web-intake-uploaded.png)
+
+![Generated clinical scores (BMI, eGFR, MAP, Wells, CCI…) from the uploaded data](../evidence/68-dev-web-scores-generated.png)
+
+![Validation reports 8 of 8 rules passed and ready to submit](../evidence/69-dev-web-validation-passed.png)
+
+![AI draft: vision findings + transcript → SOAP structured note (self-criticism)](../evidence/70-dev-web-ai-drafts-generated.png)
+
+![Review page shows AI discharge summary; visit is still Draft and not yet submitted](../evidence/71-dev-web-review-draft.png)
 
 The exact dev CORS origin was saved and applied by the gated API deployment. Production API/Vercel settings, CORS, environment secrets, and approval protection are configured; the apps remain undeployed until prod dispatch and API-to-Neon connectivity is unverified. Commit `ab26a95` has green CI #32, dev API Deploy #32, and dev Vercel Web #25. Deploy #32 shows `deploy-dev` succeeded and `deploy-prod` succeeded via manual promotion (evidence 93) — **the fix vs Project 1 where prod was skipped**. The Vercel token rotation and API-first workflow-order review are deferred until final preflight. The dev visit is still Draft; only use synthetic data.
 
@@ -463,6 +502,19 @@ The exact dev CORS origin was saved and applied by the gated API deployment. Pro
 
 The Neon project list shows the `clinicops-multimodal` project in Frankfurt with three branches. The branch overview confirms `production` is the default, non-expiring branch on the Free plan. The Connect dialog is set to branch `production`, database `neondb`, role `neondb_owner`, with pooling enabled; the password is masked. The user confirmed the production password rotation separately; the screenshot itself confirms branch/connection settings only. The FastAPI Cloud app has been tested against this database and is Live.
 
+![Neon project list and region](../evidence/72-neon-project-list.png)
+
+![Neon production branch overview](../evidence/73-neon-production-branch-overview.png)
+
+![Neon pooled connection settings for production; password masked](../evidence/74-neon-production-pooled-connect.png)
+
+![FastAPI Cloud clinicops-prod-api has DATABASE_URL and JWT_SECRET saved as masked secrets; app is Live](../evidence/75-fastapi-cloud-prod-env-secrets-masked.png)
+
+![FastAPI Cloud production app uses backend root and has Git source Not Connected](../evidence/76-fastapi-cloud-prod-source-root-confirmed.png)
+
+![GitHub production environment has the protected FastAPI Cloud secret names; values hidden](../evidence/77-github-production-environment-secrets.png)
+
+![Production FastAPI secrets are environment-only; repository-level production duplicates removed](../evidence/78-github-prod-secrets-env-only.png)
 
 Production Vercel project `clinicops-prod-web` is configured **and deployed**. CLI confirms root `frontend`, preset `Other`, install `npm ci`, build `npm run build`, and output `dist`. `VITE_API_URL=https://clinicops-prod-api.fastapicloud.dev` is saved for Production, the assigned domain is `https://clinicops-prod-web.vercel.app`, and FastAPI Cloud `CORS_ORIGINS` matches that exact origin. The Vercel project ID is `prj_kd9wWSZ1WLYM8IClegKwMTRQyl44`; the team ID is `team_HpUqb7I7uxT4kKNDP7yMLOQg`. Both IDs are now saved as GitHub `production` environment secrets (`VERCEL_PROD_PROJECT_ID` and `VERCEL_PROD_ORG_ID`). GitHub `production` contains `VERCEL_PROD_TOKEN`; its project-scoped token never expires, and the user chose to defer rotation. Rotate it before production dispatch if needed. The `.github/workflows/deploy.yml` manual production API + Vercel path is pushed on `main` at `ab26a95`; CI #32 and the automatic dev API/web deployments are green. Current order deploys and health-checks the API before Vercel production pull/build/deploy; a later frontend preparation failure could leave a partial API-only rollout — review before dispatch. **The production job has been dispatched via `promote-prod.yml` with `production` environment approval — see evidence 93.**
 
@@ -470,11 +522,31 @@ Production Vercel project `clinicops-prod-web` is configured **and deployed**. C
 
 ![Vercel build settings screen with frontend root entered](../evidence/80-vercel-clinicops-prod-web-settings.png)
 
+![Vercel CLI reports the persisted root is frontend (corrected)](../evidence/86-vercel-cli-inspect-root-uncommitted.png)
+
+![Vercel CLI confirms saved root frontend](../evidence/87-vercel-cli-root-frontend-confirmed.png)
+
+![Vercel CLI JSON lists clinicops-prod-web project ID; production URL is Live](../evidence/88-vercel-prod-project-id.png)
+
+![Vercel CLI identifies the hesam2 team ID](../evidence/89-vercel-team-id.png)
+
+![Vercel Git settings explicitly confirm clinicops-prod-web is not connected to a repository](../evidence/92-vercel-prod-git-disconnected.png)
+
 ![Vercel confirms the VITE_API_URL Production variable is saved](../evidence/81-vercel-clinicops-prod-web-prod-api-url.png)
 
 ![Vercel production domain clinicops-prod-web.vercel.app is Live](../evidence/82-vercel-clinicops-prod-web-domain.png)
 
+![FastAPI Cloud production CORS origin is set; app is Live](../evidence/83-fastapi-cloud-prod-cors-origin.png)
 
+![GitHub production environment contains VERCEL_PROD_TOKEN; token value is not shown](../evidence/84-github-production-vercel-token-secret.png)
+
+![GitHub production environment now contains both Vercel org and project ID secrets](../evidence/90-github-prod-vercel-ids-added.png)
+
+![GitHub Actions confirms the ab26a95 CI/dev API/dev web chain is green](../evidence/91-github-dev-chain-ab26a95-green.png)
+
+![Deploy #32 shows deploy-dev succeeded and deploy-prod succeeded via manual promotion](../evidence/93-deploy32-production-job-succeeded.png)
+
+![Vercel project token is scoped to clinicops-prod-web](../evidence/85-vercel-token-project-scope-expiry.png)
 
 FastAPI Cloud `clinicops-prod-api` has been created and now shows `DATABASE_URL` and `JWT_SECRET` as masked environment secrets. The app is **Live**. Its Settings page confirms root `backend` and repository **Not Connected**. The secret screenshot confirms variable names are saved — and the live `/healthz` plus smoke confirm the database connection works. Do not use its dashboard deployment control; the GitHub production workflow is the intended gate. Commit `ab26a95` is pushed to `main`; CI #32, automatic dev API Deploy #32, and Vercel Web #25 are green. The production job was **manually dispatched** via `promote-prod.yml` with approval; this run constitutes production deployment evidence (fixing Project 1 gap).
 
@@ -527,6 +599,7 @@ GitHub destination: `github.com/yazdanparasthesam/clinicops-multimodal/settings/
 
 4. **Verify:** `curl -sf https://clinicops-dev-api.fastapicloud.dev/healthz | grep ok` → `{"status":"ok","version":"0.2.0"}` + `BASE=https://clinicops-dev-api.fastapicloud.dev bash ops/smoke.sh` → `19 passed, 0 failed (28 checks, 28/28 smoke passed)` including `frontend 200` and `metrics` (fixed `pipefail 23` via temp file, see evidence `110-smoke-dev-18-passed-1-failed-metrics.png` → `113-smoke-dev-19-passed-28-28-live.png` after fix). Same for prod with `production` branch.
 
+![Live dev API healthz + 19/19 smoke live — metrics and frontend green](evidence/113-smoke-dev-19-passed-28-28-live.png)
 
 **Vercel CI-fixed deployments:** After `CI #13` green (`backend 56s`, `frontend 22s`, `compose 1m17s`), Vercel `Project Deployments` shows `CI-ready 12s` + `fix: oncall warn 15s` + `fix: ruff lenient 10s` all `Ready 12-15s` `Production` `main` (see `105-vercel-deployments-ci-ready-12s.png`).
 
