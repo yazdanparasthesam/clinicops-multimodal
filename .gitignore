@@ -219,7 +219,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Financial Statement project-specific rules
+# clinicops-multimodal project-specific rules
 # --- python ---
 __pycache__/
 *.py[cod]
@@ -243,7 +243,7 @@ coverage/
 # --- local databases & artifacts ---
 *.db
 *.sqlite3
-backend/financial-statement.db*
+backend/clinicops-multimodal.db*
 
 # --- OS/editor ---
 .DS_Store
@@ -251,7 +251,7 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Financial Statement project-specific ignore rules
+# clinicops-multimodal project-specific ignore rules
 .vscode/*
 !.vscode/mcp.json
 # Neon linked-project metadata (local branch selection)
@@ -281,7 +281,7 @@ coverage/
 # --- local databases & artifacts ---
 *.db
 *.sqlite3
-backend/financial-statement.db*
+backend/clinicops-multimodal.db*
 
 # --- OS/editor ---
 .DS_Store
