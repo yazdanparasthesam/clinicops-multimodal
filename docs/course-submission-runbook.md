@@ -571,7 +571,7 @@ Vercel **Root / Install / Build** are not in `Environment Variables` (`vercel.co
 
 `vercel.com/hesam2/clinicops-multimodal/settings/general` → **Build & Output Settings** (or `Settings → Build & Development Settings`):
 
-| Vercel field | Value (like financial-statement 44-46) | Repo path |
+| Vercel field | Value | Repo path |
 |---|---|---|
 | Root Directory | `frontend` | `frontend/` (Vite + `package.json`, `vite.config.ts`) |
 | Install Command | `npm ci` (`npm install` fallback) | `frontend/package-lock.json` |
