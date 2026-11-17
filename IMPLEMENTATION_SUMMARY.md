@@ -1,6 +1,5 @@
 # IMPLEMENTATION_SUMMARY — ClinicOps Multimodal
 
-This project is a 1:1 clone of `financial-statement` structure, re-themed to ClinicOps with multimodal ingestion (not a word removed from skeleton).
 
 ## M0–M2 — Foundation + full-stack core (COMPLETE)
 
