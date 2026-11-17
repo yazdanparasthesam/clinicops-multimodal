@@ -1,12 +1,13 @@
 # Agent Capabilities
 
-Reusable, documented capabilities an agent can pick up when working with Financial Statement —
+Reusable, documented capabilities an agent can pick up when working with ClinicOps Multimodal —
+
 the "what a specialist can do here" layer of the extension pack.
 
 | Capability | File | Uses |
 |---|---|---|
-| Filing audit workflow | `workflows/filing-audit.md` | MCP server (read-only) |
-| Anomaly explanation | `prompts/anomaly-explain.md` | runtime + agent reuse |
+| Visit audit workflow | `workflows/visit-audit.md` | MCP server (read-only) |
+| Validation explanation | `prompts/validation-explain.md` | runtime + agent reuse |
 | Notes drafting | `prompts/notes-draft.md` | runtime + agent reuse |
 | Mapping suggestion | `prompts/mapping-suggest.md` | runtime + agent reuse |
 | Review summary | `prompts/review-summary.md` | reviewer-side agents |
@@ -16,4 +17,4 @@ the "what a specialist can do here" layer of the extension pack.
 
 The `prompts/*.md` files mirror `backend/app/infra/ai/prompts.py` (single source of truth
 in code; these are the human/agent-readable copies with usage notes). If they drift, the
-code wins — and docs/ai-workflow.md must record the change.
+code wins — and `docs/ai-workflow.md` must record the change.
