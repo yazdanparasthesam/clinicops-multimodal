@@ -9,7 +9,7 @@ then an incident report in `ops/incidents/`. A restart clears crash-loops and st
 
 ## Manual escalation checklist
 1. Grafana (:3001) → golden-journey dashboard → "5xx rate" panel: which handler?
-2. Loki explore: `{service_name="financial-statement-backend"} | json | status >= 500`
+2. Loki explore: `{service_name="clinicops-multimodal-backend"} | json | status >= 500`
    — each line carries `trace_id`; click through to Tempo for the exact failing span.
 3. Typical causes:
    - **Validation gate bug** (submit with failing rules must be 422, never 500) → reproduce with
