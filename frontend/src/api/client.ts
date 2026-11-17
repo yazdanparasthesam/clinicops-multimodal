@@ -9,7 +9,7 @@ function headers(token?: string) {
   return h
 }
 
-// Token handling for legacy tests (financial-statement compat)
+// Token handling for legacy tests (clinicops-multimodal compat)
 let _token: string | null = null
 export const setToken = (t: string | null) => { _token = t }
 export const getToken = () => _token
