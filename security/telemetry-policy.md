@@ -1,25 +1,25 @@
 # Telemetry privacy policy — what leaves the process, and what never does
 
 Applies to metrics (`/metrics`), traces (OTLP → Tempo) and logs (stdout JSON → Loki).
-Rule of thumb: **signals describe the system, never the customer.**
+Rule of thumb: **signals describe the system, never the patient or visit.**
 
 ## NEVER collected (hard guarantees in code)
 
 | Category | Guarantee |
 |---|---|
 | Credentials (JWTs, API keys, passwords) | No header/cookie/token is ever logged; the log formatter whitelist has no such field; gitleaks + secret scanning in CI |
-| Personal data (emails, national ids, phone numbers) | `JsonFormatter` emits ONLY whitelisted extras (`method, route, status, duration_ms, step, rule_id`) — arbitrary `extra=` fields are dropped, unit-tested (`test_json_formatter_whitelists_extras_only` and `test_trace_privacy_hook_redacts_raw_path_and_query`) |
-| Financial figures / statement contents | No amount, account name, or trial-balance row appears in any metric label, log field or span attribute |
+| Personal data (emails, national ids, phone numbers, patient identifiers) | `JsonFormatter` emits ONLY whitelisted extras (`method, route, status, duration_ms, step, rule_id`) — arbitrary `extra=` fields are dropped, unit-tested (`test_json_formatter_whitelists_extras_only` and `test_trace_privacy_hook_redacts_raw_path_and_query`) |
+| Clinical figures / visit contents | No vitals, scores, diagnoses, prescriptions, intake notes, or attachment content appears in any metric label, log field or span attribute |
 | User identifiers | No user id/email in labels; auth context stays inside the request, not in telemetry |
-| Raw URL paths | Request logs use the FastAPI route **template** (`/api/filings/{filing_id}/submit`), so ids never become label values or log strings |
-| Uploaded file content | Only the byte count and timing of the upload step are observed |
+| Raw URL paths | Request logs use the FastAPI route **template** (`/api/visits/{visit_id}/workflow/{action}`), so ids never become label values or log strings |
+| Uploaded file content | Only the byte count and timing of the upload step are observed (images, audio, documents — content never logged) |
 
 ## What IS collected
 
-- **Metrics:** counters/histograms of system events — statements generated (by kind),
-  validation outcomes, workflow transitions (by action/status), AI calls (by kind/provider/status),
+- **Metrics:** counters/histograms of system events — visits created, scores generated (by kind),
+  validation outcomes (R001–R008), workflow transitions (by action/status), AI calls (by kind/provider/status: vision-draft, transcribe, notes-draft, chat, audit-memo),
   journey-step durations, HTTP requests (by route template/method/status class).
-  All label values come from fixed enumerations — bounded cardinality, no user data.
+  All label values come from fixed enumerations — bounded cardinality, no user or patient data.
 - **Traces** (only when `OTEL_ENABLED=true`): span names are route templates and step names;
   attributes are timing/status/kind — no request or response bodies.
 - **Logs:** one JSON line per request (template, status, duration, trace_id) plus app events
@@ -48,5 +48,5 @@ local app demo.
 ## Change control
 
 Any new metric/log field/span attribute must be reviewed against this table; the formatter
-whitelist and the `fs_*` label sets are the enforcement points (see
+whitelist and the `clinicops_*` / `vis_*` label sets are the enforcement points (see
 `backend/app/infra/telemetry/` + its unit tests).
