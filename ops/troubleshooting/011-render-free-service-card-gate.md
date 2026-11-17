@@ -1,19 +1,25 @@
 # 011 — Render Free service blocked by account card prompt
 
-**Date:** 2026-10-26  
-**Area:** Owner-side deployment setup  
-**Status:** Resolved by route change; no Render service created  
+**Date:** 2026-10-26
+
+**Area:** Owner-side deployment setup
+
+**Status:** Resolved by route change; no Render service created
+
 **Evidence policy:** Failure is documented in prose only; no failure screenshot is retained.
 
 ## Context
 
-The Financial Statement deployment was initially planned as a Render API + static frontend with Neon PostgreSQL. The user configured the `fs-dev-api` form for the public `main` branch, backend root, Dockerfile/health check, Frankfurt region, and Free plan. Auto-Deploy was disabled. No service had yet been created.
+The ClinicOps Multimodal deployment was initially planned as a Render API + static frontend with Neon PostgreSQL. The user configured the `clinicops-dev-api` form for the public `main` branch, backend root, Dockerfile/health check, Frankfurt region, and Free plan. Auto-Deploy was disabled. No service had yet been created.
 
 ## Reproduction and observed behavior
 
 1. Select the Render Free plan (`$0/month`) on the service creation form.
+
 2. Submit the “Deploy web service” action.
+
 3. Render presents an “Add Card” payment-method modal instead of creating the service.
+
 4. Canceling returns to the form; retrying reproduces the same prompt.
 
 Render's general documentation says free resources ordinarily do not require payment details, but the actual account flow remained blocked. The user confirmed they do not have a card. No payment information was entered and no Render service was created or deployed.
