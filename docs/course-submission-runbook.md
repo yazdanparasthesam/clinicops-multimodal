@@ -463,19 +463,6 @@ The exact dev CORS origin was saved and applied by the gated API deployment. Pro
 
 The Neon project list shows the `clinicops-multimodal` project in Frankfurt with three branches. The branch overview confirms `production` is the default, non-expiring branch on the Free plan. The Connect dialog is set to branch `production`, database `neondb`, role `neondb_owner`, with pooling enabled; the password is masked. The user confirmed the production password rotation separately; the screenshot itself confirms branch/connection settings only. The FastAPI Cloud app has been tested against this database and is Live.
 
-![Neon project list and region](../evidence/72-neon-project-list.png)
-
-![Neon production branch overview](../evidence/73-neon-production-branch-overview.png)
-
-![Neon pooled connection settings for production; password masked](../evidence/74-neon-production-pooled-connect.png)
-
-![FastAPI Cloud clinicops-prod-api has DATABASE_URL and JWT_SECRET saved as masked secrets; app is Live](../evidence/75-fastapi-cloud-prod-env-secrets-masked.png)
-
-![FastAPI Cloud production app uses backend root and has Git source Not Connected](../evidence/76-fastapi-cloud-prod-source-root-confirmed.png)
-
-![GitHub production environment has the protected FastAPI Cloud secret names; values hidden](../evidence/77-github-production-environment-secrets.png)
-
-![Production FastAPI secrets are environment-only; repository-level production duplicates removed](../evidence/78-github-prod-secrets-env-only.png)
 
 Production Vercel project `clinicops-prod-web` is configured **and deployed**. CLI confirms root `frontend`, preset `Other`, install `npm ci`, build `npm run build`, and output `dist`. `VITE_API_URL=https://clinicops-prod-api.fastapicloud.dev` is saved for Production, the assigned domain is `https://clinicops-prod-web.vercel.app`, and FastAPI Cloud `CORS_ORIGINS` matches that exact origin. The Vercel project ID is `prj_kd9wWSZ1WLYM8IClegKwMTRQyl44`; the team ID is `team_HpUqb7I7uxT4kKNDP7yMLOQg`. Both IDs are now saved as GitHub `production` environment secrets (`VERCEL_PROD_PROJECT_ID` and `VERCEL_PROD_ORG_ID`). GitHub `production` contains `VERCEL_PROD_TOKEN`; its project-scoped token never expires, and the user chose to defer rotation. Rotate it before production dispatch if needed. The `.github/workflows/deploy.yml` manual production API + Vercel path is pushed on `main` at `ab26a95`; CI #32 and the automatic dev API/web deployments are green. Current order deploys and health-checks the API before Vercel production pull/build/deploy; a later frontend preparation failure could leave a partial API-only rollout — review before dispatch. **The production job has been dispatched via `promote-prod.yml` with `production` environment approval — see evidence 93.**
 
