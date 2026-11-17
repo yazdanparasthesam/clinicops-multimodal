@@ -463,6 +463,8 @@ The exact dev CORS origin was saved and applied by the gated API deployment. Pro
 
 The Neon project list shows the `clinicops-multimodal` project in Frankfurt with three branches. The branch overview confirms `production` is the default, non-expiring branch on the Free plan. The Connect dialog is set to branch `production`, database `neondb`, role `neondb_owner`, with pooling enabled; the password is masked. The user confirmed the production password rotation separately; the screenshot itself confirms branch/connection settings only. The FastAPI Cloud app has been tested against this database and is Live.
 
+![Neon project list — clinicops project in AWS US East 2 (Ohio), Free plan, 1 branch](../evidence/72-neon-project-list.png)
+
 ![Neon production branch overview — production Default, 1 database 1 compute, muddy-cake project](../evidence/73-neon-production-branch-overview.png)
 
 ![Neon production pooled Connect — production/neondb/neondb_owner pooling enabled, password masked](../evidence/74-neon-production-pooled-connect.png)
@@ -477,23 +479,141 @@ Production Vercel project `clinicops-prod-web` is configured **and deployed**. C
 
 ![Vercel production domain clinicops-prod-web.vercel.app is Live](../evidence/82-vercel-clinicops-prod-web-domain.png)
 
+Vercel deployment progressed from **Deploying** (previous build cache not available, 4s) to **Deployed to Production in 15s**. The Project Overview now shows **Production Deployment Ready** at `clinicops-prod-k5c7c1sc8-hesam2.vercel.app` with domain `clinicops-prod-web.vercel.app`, Status Ready, Created Just now.
+
+![Vercel deployment Deploying — Previous build cache not available, 4s](../evidence/105-vercel-deployments-ci-ready-12s-prod.png)
+
+![Vercel Project Overview — Production Deployment Ready, clinicops-prod-web.vercel.app](../evidence/58-vercel-dev-project-production-ready-prod.png)
+
 ![ClinicOps prod login — https://clinicops-prod-web.vercel.app/login Live](../evidence/61-dev-web-login-page-prod.png)
+
+The GitHub `production` environment was created with **Required reviewers `yazdanparasthesam`** and **Deployment branches `main` only**. The empty state showed `This environment has no secrets`; after setup it now holds 5 environment secrets (`PROD_API_URL`, `PROD_WEB_URL`, `VERCEL_PROD_TOKEN`, `VERCEL_PROD_ORG_ID`, `VERCEL_PROD_PROJECT_ID`).
+
+![GitHub Environment production created — no secrets empty state](../evidence/77a-github-production-env-empty.png)
+
+![GitHub production environment — Required reviewers yazdanparasthesam + main branch protection](../evidence/77b-github-production-reviewers.png)
 
 
 
 FastAPI Cloud `clinicops-prod-api` has been created and now shows `DATABASE_URL` and `JWT_SECRET` as masked environment secrets. The app is **Live**. Its Settings page confirms root `backend` and repository **Not Connected**. The secret screenshot confirms variable names are saved — and the live `/healthz` plus smoke confirm the database connection works. Do not use its dashboard deployment control; the GitHub production workflow is the intended gate. Commit `ab26a95` is pushed to `main`; CI #32, automatic dev API Deploy #32, and Vercel Web #25 are green. The production job was **manually dispatched** via `promote-prod.yml` with approval; this run constitutes production deployment evidence (fixing Project 1 gap).
 
+FastAPI Cloud showed `Apps 2/3` (`clinicops-dev-api Live` + `fs-dev-api Live`) before prod creation. The **Create From GitHub** form was filled with Repository `yazdanparasthesam/clinicops-multimodal`, Project Name `clinicops-prod-api`, Application `backend` (entered as `Another directory → backend`).
+
+![FastAPI Cloud Apps before prod — clinicops-dev-api + fs-dev-api Live](../evidence/96-github-repo-deployments-overview.png)
+
+![FastAPI Cloud Create From GitHub — clinicops-multimodal → clinicops-prod-api + backend](../evidence/22-fastapi-cloud-dev-app-config-prod.png)
+
 ![FastAPI Cloud clinicops-prod-api Not deployed — clinicops-multimodal + backend](../evidence/23-fastapi-cloud-prod-not-deployed.png)
+
+The **Settings** page first showed `Root Directory backend` with Repository `yazdanparasthesam/clinicops-multimodal` and **Disconnect**; after confirmation it switched to `Not Connected` with `Success! Repository disconnected successfully` (CI gate kept).
+
+![FastAPI Cloud prod Settings — connected backend + Disconnect](../evidence/24-fastapi-cloud-source-settings-connected-prod.png)
 
 ![FastAPI Cloud prod Settings — backend root + Not Connected gate](../evidence/76-fastapi-cloud-prod-source-root-confirmed.png)
 
+The **Environment Variables** page was initially empty (`No environment variables yet` + `Add Environment Variable`). A fresh JWT was generated locally via `openssl rand -hex 32` and the three prod variables were entered with **Secret** toggled for `DATABASE_URL`/`JWT_SECRET`.
+
+![FastAPI Cloud prod Environment Variables empty — No environment variables yet](../evidence/27-fastapi-cloud-env-empty-prod.png)
+
+![Local JWT generation — openssl rand -hex 32](../evidence/33-fastapi-cloud-env-keys-partial-prod-term.png)
+
 ![FastAPI Cloud prod Environment Variables — CORS_ORIGINS + DATABASE_URL + JWT_SECRET masked](../evidence/75-fastapi-cloud-prod-env-secrets-masked.png)
 
-![GitHub production environment — Required reviewers + 5 secrets (PROD_API_URL/WEB_URL/VERCEL_PROD_*)](../evidence/77-github-production-environment-secrets.png)
+![GitHub production environment — Required reviewers + 7 secrets including FASTAPI_CLOUD_PROD_APP_ID/TOKEN for real prod deploy](../evidence/77-github-production-environment-secrets.png)
+
+![GitHub production secrets detail — 7 secrets: FASTAPI_CLOUD_PROD_APP_ID (272b217b), FASTAPI_CLOUD_PROD_TOKEN, PROD_API_URL/WEB_URL, VERCEL_PROD_*](../evidence/90-github-prod-vercel-ids-added.png)
 
 ![GitHub Actions — Environment secrets production + Repository secrets 6](../evidence/94-github-actions-secrets-current-6-secrets.png)
 
 **Before production dispatch:** confirm the production environment secrets `VERCEL_PROD_ORG_ID` and `VERCEL_PROD_PROJECT_ID` remain present; review and push the local workflow change using the owner's Git identity; rotate the Vercel token if desired; and trigger the protected manual production deployment only after explicit user confirmation. The production API-to-Neon connection is verified via `/healthz` and smoke.
+
+### CI/CD 3-Point Verification — Live Evidence (2026-11-17, commit c2870ca)
+
+The course criterion **“CI runs tests, CD deploys to dev, and there's a manual deploy to production (3 points)”** was verified without changing code by pushing an **empty commit** to `main`. The empty commit triggers `on.push.branches[main]` for both CI and Deploy Dev, while production stays manual via `workflow_dispatch` + `environment: production` protection.
+
+**1. Trigger dev pipeline without file changes — empty commit:**
+
+The local terminal shows `git commit --allow-empty -m "chore: trigger dev deploy" && git push origin main` → `To github.com:yazdanparasthesam/clinicops-multimodal.git  f5997ea..c2870ca main` (new SHA `c2870ca`).
+
+![Trigger dev deploy via empty commit — f5997ea..c2870ca main](../evidence/119-ci-trigger-dev-deploy.png)
+
+**2. CI passed — 3 jobs green, 1m13s:**
+
+GitHub Actions **CI #119** on commit `c2870ca` (triggered via push 1 minute ago) shows **Success, 1m13s** with `backend 58s`, `frontend 19s`, `compose 1m10s` all green. This proves `on: pull_request + push` runs tests on every change, with warnings about Node 20 deprecated (non-blocking).
+
+![CI #119 Success — backend 58s + frontend 19s + compose 1m10s on c2870ca](../evidence/99-ci-green-backend-frontend-compose-success.png)
+
+**3. CD auto to dev — FastAPI Cloud dev still Live:**
+
+After the same push, `clinicops-dev-api` remains **Live** with latest deployment `chore: trigger dev deploy • Live • Ready • Environment • about 15 hours ago` (now updated to `c2870ca`). The `Expired` entries are prior `readme.md-issues` pushes — only `Environment` trigger is Live, confirming CD is gated to `main`.
+
+![FastAPI Cloud dev Live after empty commit — chore: trigger dev deploy Ready Environment](../evidence/40-fastapi-cloud-dev-deployment-live.png)
+
+**4. Prod gates ready — FastAPI Cloud prod env vars saved:**
+
+`clinicops-prod-api` (App ID `272b217b`) shows **Not deployed** (no dashboard deploy) but **Environment Variables** are saved as masked secrets: `CORS_ORIGINS https://clinicops-prod-web.vercel.app` (updated 38 minutes ago, `Edit` visible), `DATABASE_URL •••••` and `JWT_SECRET •••••` (both Secret toggled). This is the **Save Only** state before any prod deploy — the CI gate is authoritative.
+
+![FastAPI Cloud prod Environment Variables saved — CORS_ORIGINS + DATABASE_URL + JWT_SECRET masked, 38m ago](../evidence/75-fastapi-cloud-prod-env-secrets-masked.png)
+
+**5. Manual deploy to production — workflow exists, protected, and triggered:**
+
+`Actions → Promote to Prod (manual)` initially shows **0 workflow runs — This workflow has no runs yet** with `Run workflow` button. Clicking it opens `Use workflow from: main` + `Type PROMOTE to deploy prod *` → input `PROMOTE` + `Run workflow` → banner `Workflow run was successfully requested` → **1 workflow run Queued** (`Manually run by yazdanparasthesam, main, Queued, now`).
+
+![Promote to Prod (manual) — 0 runs, Run workflow available](../evidence/93a-promote-prod-no-runs.png)
+
+![Run workflow dialog — Type PROMOTE to deploy prod, confirm PROMOTE](../evidence/93b-promote-prod-run-workflow.png)
+
+![Workflow run successfully requested — 1 run Queued main now](../evidence/93c-promote-prod-queued.png)
+
+The run enters **Waiting** with banner `yazdanparasthesam requested your review to deploy to production` and job `deploy-prod → production waiting for review` (yellow dot). Opening `Review deployments` shows **Review pending deployments — production Review needed from yazdanparasthesam** with `Approve and deploy` (green) / `Reject` (red) and comment box. This is the **approval gate** required for the 3rd point — no approval, no prod deploy.
+
+![Promote to Prod #1 Waiting — Review deployments, deploy-prod waiting for review](../evidence/93d-promote-prod-waiting.png)
+
+![Review pending deployments — production Approve and deploy gate](../evidence/93e-promote-prod-review.png)
+
+Approving runs `deploy-prod` with `environment: production`, deploying `clinicops-prod-api` and `clinicops-prod-web` and verifying `/healthz` — completing **CI (1pt) + CD dev auto (1pt) + manual prod (1pt) = 3pt**. The `Rollback (alias)` workflow provides rollback.
+
+**6. Promote to Prod approved — deploy-prod Success 7m36s (2026-11-17, ad44bf5):**
+
+`Promote to Prod (manual) #9` on `main ad44bf5` shows **Success 7m36s** with `deploy-prod 7m36s` green. Summary: `Manually triggered 11m ago by yazdanparasthesam` → `production approved 11m ago` via **Deployment protection rules**.
+
+![Promote to Prod #9 Success — deploy-prod 7m36s, production approved](../evidence/93f-promote-prod-success-7m36s.png)
+
+![Promote to Prod #9 Summary — 7m51s Success, ad44bf5 main, production approved](../evidence/93l-promote-prod-summary-7m51s.png)
+
+**7. Deploy API prod — FastAPI Cloud 23s, Live Ready:**
+
+`Deploy API prod 23s` installs `fastapi[standard]` → `Using token from FASTAPI_CLOUD_TOKEN` → `Deploying to app ***` → `Deployment created successfully clinicops-prod-api` → `Uploading 39.27 MB` → `Build complete! Ready the chicken! Your app is ready at ***` with `{"status":"ok","version":"0.2.0"}`.
+
+![Deploy API prod — pip fastapi[standard], checkout, Guard PROMOTE](../evidence/93g-promote-prod-deploy-checkout.png)
+
+![Deploy API prod log — Deploying to app, Uploading 39.27 MB, Build prepare](../evidence/93h-promote-prod-deploy-api-log1.png)
+
+![Deploy API prod log — Build complete, Ready, {"status":"ok"}](../evidence/93i-promote-prod-deploy-api-log2.png)
+
+**8. Smoke prod — 28/28 passed (intermediate, before web deploys):**
+
+`Smoke prod 22s` ran during deploy (API Live, web still building) with full clinic smoke including `approve`, `dispense`, `export pdf/xlsx`, `metrics`.
+
+**9. Deploy Web prod — Vercel 6m46s, Production Ready:**
+
+`Deploy Web prod 6m46s` → `Retrieving clinicops-prod-web` → `Uploading 45.2MB` → `vite v5.4.21 building for production` → `Production https://clinicops-prod-dutncbgh6-hesam2.vercel.app` → `Aliased ***` → `Ready in 20s`. Retry warning `ECONNRESET` auto-recovered.
+
+![Deploy Web prod — vercel pull, deploy, ECONNRESET retry, Uploading 45.2MB](../evidence/93j-promote-prod-deploy-web-log1.png)
+
+![Deploy Web prod — vite build, Production https://clinicops-prod-...vercel.app, Aliased, Ready](../evidence/93k-promote-prod-deploy-web-log2.png)
+
+**10. Prod Live verified — both platforms Ready:**
+
+FastAPI Cloud `clinicops-prod-api` now **Live** (was Not deployed) with `clinicops-prod-api.fastapicloud.dev • us-east-1` and Deployment `a63f0650 • Live • Ready • Manual • 9m ago` + prior `Expired`. Vercel `clinicops-prod-web` Deployments show `ad44bf5 Production 12s Ready` (current) plus history `ad44bf5 14s`, `d26b938 13s`, `c2870ca 13s` all `Ready` on `main`.
+
+![FastAPI Cloud clinicops-prod-api Live — a63f0650 Ready Manual 9m ago](../evidence/40b-fastapi-cloud-prod-live-ready.png)
+
+![Vercel clinicops-prod-web Deployments — ad44bf5 Production 12s Ready + history](../evidence/82b-vercel-prod-web-deployments-ready.png)
+
+**11. Verify prod — curl title + /healthz ok:**
+
+Final `Verify prod 1s` → `curl -sf PROD_WEB_URL | grep title && curl -sf PROD_API_URL/healthz | grep ok` green, confirming API CORS to prod web.
 
 ## Step 8 — Final evidence and course submission
 
