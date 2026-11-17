@@ -1,7 +1,7 @@
 name: Auto-close tracker issues on commit
 
 # Closes tracker issues when commits contain "Closes #N" / "Fixes #N" / "Resolves #N"
-# Like financial-statement's manual gh close workflow, but automated for ClinicOps.
+# YOu can manually gh close workflow, but automated for ClinicOps.
 # Agent commits should reference tracker issues: e.g. "feat: multimodal intake (Closes #2)"
 
 on:
