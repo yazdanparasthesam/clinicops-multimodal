@@ -12,11 +12,11 @@ On 2026-10-25 UTC, the user ran `sudo ./ops/alert-drill.sh`. The command output 
 - Incident report `ops/incidents/20261025-221233-BackendDown-2e62e391.md` was written with **Status: remediated**.
 - Script ended with `DRILL PASSED`.
 
-Immediately afterward, the user showed Prometheus Targets with `financial-statement-backend (0/1 up)` and a DNS lookup error for `backend` (`127.0.0.11:53: server misbehaving`), plus Alertmanager still listing one `BackendDown` alert. These follow-up views were not saved as evidence because they do not show successful recovery.
+Immediately afterward, the user showed Prometheus Targets with `clinicops-multimodal-backend (0/1 up)` and a DNS lookup error for `backend` (`127.0.0.11:53: server misbehaving`), plus Alertmanager still listing one `BackendDown` alert. These follow-up views were not saved as evidence because they do not show successful recovery.
 
 ## Resolution
 
-After allowing the scrape/evaluation interval and refreshing, Prometheus showed `financial-statement-backend (1/1 up)` and a green `UP` state. Alertmanager showed `No alert groups found`. This confirms the host `/healthz` verification and Prometheus in-network scrape converged. Successful captures are `evidence/06-prometheus-target-recovered.png` and `evidence/06-alertmanager-cleared.png`. No failure screenshots were retained. The incident report was emitted at `ops/incidents/20261025-221233-BackendDown-2e62e391.md` with status `remediated`.
+After allowing the scrape/evaluation interval and refreshing, Prometheus showed `clinicops-multimodal-backend (1/1 up)` and a green `UP` state. Alertmanager showed `No alert groups found`. This confirms the host `/healthz` verification and Prometheus in-network scrape converged. Successful captures are `evidence/06-prometheus-target-recovered.png` and `evidence/06-alertmanager-cleared.png`. No failure screenshots were retained. The incident report was emitted at `ops/incidents/20261025-221233-BackendDown-2e62e391.md` with status `remediated`.
 
 
 ## Additional report received
