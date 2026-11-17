@@ -527,7 +527,6 @@ GitHub destination: `github.com/yazdanparasthesam/clinicops-multimodal/settings/
 
 4. **Verify:** `curl -sf https://clinicops-dev-api.fastapicloud.dev/healthz | grep ok` → `{"status":"ok","version":"0.2.0"}` + `BASE=https://clinicops-dev-api.fastapicloud.dev bash ops/smoke.sh` → `19 passed, 0 failed (28 checks, 28/28 smoke passed)` including `frontend 200` and `metrics` (fixed `pipefail 23` via temp file, see evidence `110-smoke-dev-18-passed-1-failed-metrics.png` → `113-smoke-dev-19-passed-28-28-live.png` after fix). Same for prod with `production` branch.
 
-![Live dev API healthz + 19/19 smoke live — metrics and frontend green](evidence/113-smoke-dev-19-passed-28-28-live.png)
 
 **Vercel CI-fixed deployments:** After `CI #13` green (`backend 56s`, `frontend 22s`, `compose 1m17s`), Vercel `Project Deployments` shows `CI-ready 12s` + `fix: oncall warn 15s` + `fix: ruff lenient 10s` all `Ready 12-15s` `Production` `main` (see `105-vercel-deployments-ci-ready-12s.png`).
 
