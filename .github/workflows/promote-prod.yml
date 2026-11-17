@@ -18,19 +18,16 @@ jobs:
       - name: Deploy API prod
         env:
           FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_PROD_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }}
         run: |
           pip install --user "fastapi[standard]"
           export PATH=$HOME/.local/bin:$PATH
-          fastapi --help
-          fastapi deploy --help
-          fastapi cloud deploy --help || true
-          # auth via env token (no --token on deploy)
-          echo "$FASTAPI_CLOUD_TOKEN" | fastapi login --token-stdin 2>&1 || echo "$FASTAPI_CLOUD_TOKEN" | fastapi cloud login --token-stdin 2>&1 || true
-          # deploy - try with app-id, fallback without
-          fastapi deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} || \
-          fastapi cloud deploy --app-id ${{ secrets.FASTAPI_CLOUD_PROD_APP_ID }} || \
-          fastapi deploy || \
-          fastapi cloud deploy
+          echo "Token set: $(echo $FASTAPI_CLOUD_TOKEN | cut -c1-8)*** AppID $FASTAPI_CLOUD_APP_ID"
+          fastapi deploy --help | head -n 30
+          # deploy backend dir (where app/main.py lives) with full UUID
+          fastapi deploy backend --app-id $FASTAPI_CLOUD_APP_ID || \
+          fastapi cloud deploy backend --app-id $FASTAPI_CLOUD_APP_ID || \
+          FASTAPI_CLOUD_APP_ID=$FASTAPI_CLOUD_APP_ID fastapi deploy backend
           for i in 1 2 3 4 5 6; do curl -sf ${{ secrets.PROD_API_URL }}/healthz && break || sleep 10; done
           curl -sf ${{ secrets.PROD_API_URL }}/healthz | grep -q ok
       - name: Smoke prod
