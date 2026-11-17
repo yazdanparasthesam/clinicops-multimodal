@@ -2,7 +2,7 @@
 
 **Goal:** produce a one-page audit memo for a filing, using only server-provided facts.
 
-**Requires:** MCP server `financial-statement` connected (read-only), a `FS_TOKEN` for a reviewer or
+**Requires:** MCP server `clinicops-multimodal` connected (read-only), a `FS_TOKEN` for a reviewer or
 the owning preparer.
 
 **Steps**
