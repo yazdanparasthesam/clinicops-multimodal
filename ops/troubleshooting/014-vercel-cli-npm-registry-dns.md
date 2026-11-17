@@ -10,7 +10,7 @@
 1. The initial `npx vercel@latest project create fs-dev-web` attempt used the configured npm registry `nexus.tasn.ir` and failed with `getaddrinfo ENOTFOUND` before Vercel CLI started.
 2. Retrying with a command-scoped public registry successfully created the empty Vercel project. The dashboard confirms `fs-dev-web.vercel.app`, no Git connection, and no deployment.
 3. A subsequent link attempt omitted the per-command registry override and again failed before CLI startup; it was also run from the repository root instead of `frontend/`.
-4. The user then ran the corrected command from `~/Documents/financial-statement/frontend` with the public registry override. Vercel CLI confirms the directory is linked to `hesam2/fs-dev-web`.
+4. The user then ran the corrected command from `~/Documents/clinicops-multimodal/frontend` with the public registry override. Vercel CLI confirms the directory is linked to `hesam2/fs-dev-web`.
 
 ## Local credential handling
 
