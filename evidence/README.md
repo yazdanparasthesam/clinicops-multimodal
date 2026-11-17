@@ -1,6 +1,6 @@
 # Evidence Index — ClinicOps Multimodal
 
-**Rule:** this folder contains successful evidence frames only (like financial-statement). Failed attempts are described in prose in troubleshooting; do not save failure screenshots. This project keeps **both**: the full original 90+ evidence frames for tree parity, and a **curated 15** for reviewers (per peer feedback: "short curated list of 8-10 most important ones would help").
+**Rule:** this folder contains successful evidence frames only (like clinicops-multimodal). Failed attempts are described in prose in troubleshooting; do not save failure screenshots. This project keeps **both**: the full original 90+ evidence frames for tree parity, and a **curated 15** for reviewers (per peer feedback: "short curated list of 8-10 most important ones would help").
 
 ## Curated 15 (reviewer-facing — mapped to 12 criteria)
 
@@ -22,11 +22,11 @@
 | 13 | Alert | curated/13-alert-firing.png | Prometheus alert firing |
 | 14 | On-call | curated/14-incident-report.png | ops/incidents/*.md created |
 
-Curated frames are in `evidence/curated/` (15 max). Original 90+ frames from financial-statement are preserved in `evidence/` for tree parity (e.g., `00-local-project-docker-version.png` … `93-deploy32-production-job-skipped.png`).
+Curated frames are in `evidence/curated/` (15 max). Original 90+ frames from clinicops-multimodal are preserved in `evidence/` for tree parity (e.g., `00-local-project-docker-version.png` … `93-deploy32-production-job-skipped.png`).
 
 ## Full evidence (original 90+ frames — tree parity)
 
-See original index below (copied 1:1 from financial-statement):
+See original index below (copied 1:1 from clinicops-multimodal):
 
 # Submission evidence index
 
@@ -43,7 +43,7 @@ embedded there as an in-progress instruction only; it is intentionally not index
 | `step2-compose-services-healthy.png` | Compose build completed; DB/backend healthy and frontend started | **verified (2026-10-25)** |
 | `step2-compose-ps.png` | Compose status confirms the three app-only services running | **verified (2026-10-25)** |
 | `step2-health-and-http-200.png` | Backend health endpoint OK; frontend responds HTTP 200 | **verified (2026-10-25)** |
-| `step2-frontend-login.png` | Browser renders the Financial Statement login page | **verified (2026-10-25)** |
+| `step2-frontend-login.png` | Browser renders the clinicops-multimodal login page | **verified (2026-10-25)** |
 | `03-compose-smoke.png` | App-only Compose lifecycle smoke: 28 passed, 0 failed | **verified (2026-10-25)** |
 | `step4-project-commit-clean-no-remote.png` | Nested project root verified; local commit present and worktree clean | **verified (2026-10-25)** |
 | `step4-origin-fetched-unrelated-history.png` | Public starter history fetched; separate roots inspected before merge | **verified (2026-10-25)** |
@@ -56,7 +56,7 @@ embedded there as an in-progress instruction only; it is intentionally not index
 | `07-ci-security-artifacts.png` | Security artifacts published; no leaks detected | **verified (2026-10-26)** |
 | `04-observability.png` | Full Compose observability profile running; DB/backend healthy | **verified (2026-10-26)** |
 | `04-observability-health.png` | Responder, Prometheus, and Alertmanager health endpoints succeed | **verified (2026-10-26)** |
-| `04-prometheus-target-up.png` | Prometheus backend target financial-statement-backend is UP | **verified (2026-10-26)** |
+| `04-prometheus-target-up.png` | Prometheus backend target clinicops-multimodal-backend is UP | **verified (2026-10-26)** |
 | `04-alertmanager-baseline-clear.png` | Alertmanager has no firing alert groups before drill | **verified (2026-10-26)** |
 | `04-observability-smoke.png` | Telemetry-enabled HTTP smoke: 28 passed, 0 failed | **verified (2026-10-26)** |
 | `04-grafana-golden-journey.png` | Grafana golden-journey dashboard populated with request rate, latency, and business counters | **verified (2026-10-26)** |
@@ -85,7 +85,7 @@ embedded there as an in-progress instruction only; it is intentionally not index
 | `17-fastapi-cloud-hobby-dashboard.png` | FastAPI Cloud dashboard shows no app created yet; setup/access evidence only, not deployment proof | **verified (2026-10-26)** |
 | `18-vercel-hobby-dashboard.png` | Vercel Hobby workspace usage panel; account name and unrelated project cards excluded; setup/access evidence only | **verified (2026-10-26)** |
 | `19-fastapi-cloud-create-app-options.png` | FastAPI Cloud offers GitHub Repo and Empty app creation paths; account and browser identity excluded | **verified (2026-10-27)** |
-| `20-fastapi-cloud-github-repository-list.png` | GitHub integration installed; public `financial-statement` repository is available to select | **verified (2026-10-27; setup only)** |
+| `20-fastapi-cloud-github-repository-list.png` | GitHub integration installed; public `clinicops-multimodal` repository is available to select | **verified (2026-10-27; setup only)** |
 | `21-fastapi-cloud-backend-app-config.png` | Initial pre-create form confirms repository and `backend` application directory | **verified (2026-10-27; setup only)** |
 | `22-fastapi-cloud-dev-app-config.png` | Updated pre-create form uses app name `fs-dev-api` and correct `backend` application directory | **verified (2026-10-27; setup only)** |
 | `23-fastapi-cloud-created-not-deployed.png` | FastAPI Cloud dev API app `fs-dev-api` exists and shows **Not deployed**; GitHub source remains connected; no code deployed | **verified (2026-10-27; setup only)** |
@@ -125,8 +125,8 @@ embedded there as an in-progress instruction only; it is intentionally not index
 | `57-github-latest-dev-deploy-green.png` | Latest GitHub Actions shows CI #10 (`10f7387`), API Deploy #10, and Deploy Vercel Web #3 green | **verified (2026-10-27)** |
 | `58-vercel-dev-project-production-ready.png` | Vercel `fs-dev-web` overview shows the Production deployment Ready at the public dev domain | **verified (2026-10-27)** |
 | `59-vercel-dev-deployment-details-ready.png` | Vercel deployment details mark the latest deployment Ready and Production/Current for `fs-dev-web.vercel.app` | **verified (2026-10-27)** |
-| `60-vercel-preview-login-page.png` | The Vercel-generated deployment URL serves the Financial Statement sign-in page | **verified (2026-10-27; preview deployment)** |
-| `61-dev-web-login-page.png` | The stable `fs-dev-web.vercel.app/login` URL renders the Financial Statement sign-in page | **verified (2026-10-27)** |
+| `60-vercel-preview-login-page.png` | The Vercel-generated deployment URL serves the clinicops-multimodal sign-in page | **verified (2026-10-27; preview deployment)** |
+| `61-dev-web-login-page.png` | The stable `fs-dev-web.vercel.app/login` URL renders the clinicops-multimodal sign-in page | **verified (2026-10-27)** |
 | `62-dev-web-registration-form-redacted.png` | Registration page renders; full name, email, and password values are blanked in this evidence copy | **verified (2026-10-27; redacted)** |
 | `63-dev-web-empty-dashboard.png` | Newly registered dev user reaches the initial Dashboard; no account email is included | **owner-confirmed (2026-10-27; redacted crop)** |
 | `64-dev-web-company-created-redacted.png` | Dashboard company/filing form shown with the entered National ID value blanked | **owner-provided (2026-10-27; identifier redacted)** |
@@ -137,7 +137,7 @@ embedded there as an in-progress instruction only; it is intentionally not index
 | `69-dev-web-validation-passed.png` | Validation reports 8/8 passed and clean; prior-year checks are skipped because none is on file | **owner-confirmed (2026-10-27; synthetic data)** |
 | `70-dev-web-mock-notes-generated.png` | Mock AI Revenue note is generated and displayed; **Save final text has not yet been clicked** | **owner-confirmed (2026-10-27; redacted crop)** |
 | `71-dev-web-review-draft.png` | Review page shows mock audit memo and a clear gate, but filing remains Draft; Submit for review has not been clicked | **owner-confirmed (2026-10-27; pre-submit)** |
-| `72-neon-project-list.png` | Neon project list shows `financial-statement` in Frankfurt on the Free plan; no credentials shown | **owner-provided (2026-10-28; project-level evidence)** |
+| `72-neon-project-list.png` | Neon project list shows `clinicops-multimodal` in Frankfurt on the Free plan; no credentials shown | **owner-provided (2026-10-28; project-level evidence)** |
 | `73-neon-production-branch-overview.png` | Neon overview shows the persistent `production` default branch and three project branches | **owner-provided (2026-10-28; branch exists, API not deployed)** |
 | `74-neon-production-pooled-connect.png` | Connect dialog selects `production` / `neondb` / `neondb_owner`; pooling on and password masked; password rotation not confirmed | **owner-provided (2026-10-28; settings evidence, connection not yet tested)** |
 | `75-fastapi-cloud-prod-env-secrets-masked.png` | FastAPI Cloud `fs-prod-api` lists `DATABASE_URL` and `JWT_SECRET` with masked values; app still Not deployed | **owner-provided (2026-10-28; values hidden; database connectivity not tested)** |
